@@ -35,6 +35,13 @@
     <string name="content_import_success">%1$s imported</string>
     <string name="content_import_failed">Import failed</string>
 
+    <!-- Share log to mclo.gs, ported from Copper-Android -->
+    <string name="share_log_dialog_title">Share log</string>
+    <string name="share_log_mclogs_option">Share to mclo.gs</string>
+    <string name="share_log_mclogs_uploading">Uploading log to mclo.gs…</string>
+    <string name="share_log_mclogs_copied">mclo.gs link copied to clipboard</string>
+    <string name="share_log_mclogs_error">Failed to upload log to mclo.gs</string>
+
     <!-- Action bar part -->
 
     <!-- Languages list part -->
