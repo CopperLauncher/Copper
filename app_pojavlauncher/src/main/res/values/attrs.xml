@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Theme attributes ported from CopperLauncher/Copper-Android, used by
+         ThemeManager/LauncherPreferenceFragment to re-skin the app per preset. -->
+    <attr name="bgMainDrawable" format="reference|color" />
+    <attr name="colorBgApp" format="color" />
+    <attr name="colorBgStatusBar" format="color" />
+    <attr name="colorBgBottomBar" format="color" />
+    <attr name="colorDivider" format="color" />
+    <attr name="copperAccent" format="color" />
+    <attr name="colorTextPrimary" format="color" />
+    <attr name="colorTextSecondary" format="color" />
+</resources>

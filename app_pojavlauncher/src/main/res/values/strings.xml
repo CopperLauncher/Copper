@@ -3,6 +3,15 @@
     <!-- App name part -->
     <string name="app_short_name" translatable="false">Copper</string>
 
+    <!-- Launcher appearance / theming, ported from Copper-Android -->
+    <string name="preference_category_launcher_appearance">Appearance</string>
+    <string name="preference_appearance_description">Colour theme and gradient background</string>
+    <string name="preference_colour_presets_title">Colour theme</string>
+    <string name="preference_colour_presets_summary">Pick a built-in colour preset</string>
+    <string name="preference_bg_gradient_title">Gradient background</string>
+    <string name="preference_bg_gradient_summary">Use a gradient background matching the current theme</string>
+    <string name="preference_colour_reset">Reset to default</string>
+
     <!-- Action bar part -->
 
     <!-- Languages list part -->

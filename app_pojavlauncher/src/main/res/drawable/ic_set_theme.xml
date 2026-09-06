@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generic palette glyph; upstream Copper-Android ships this as a PNG, redrawn
+     here as a vector so the icon can travel as a plain-text resource. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24"
+    android:tint="?attr/colorTextPrimary">
+    <path
+        android:fillColor="@android:color/white"
+        android:pathData="M12,3C7.03,3 3,6.58 3,11c0,2.03 1.14,3.87 3,5.24V21l3.5,-2.1c0.8,0.16 1.63,0.24 2.5,0.24 4.97,0 9,-3.58 9,-8S16.97,3 12,3zM7.5,11c-0.83,0 -1.5,-0.67 -1.5,-1.5S6.67,8 7.5,8 9,8.67 9,9.5 8.33,11 7.5,11zM10.5,7C9.67,7 9,6.33 9,5.5S9.67,4 10.5,4s1.5,0.67 1.5,1.5S11.33,7 10.5,7zM14.5,7C13.67,7 13,6.33 13,5.5S13.67,4 14.5,4s1.5,0.67 1.5,1.5S15.33,7 14.5,7zM16.5,11c-0.83,0 -1.5,-0.67 -1.5,-1.5S15.67,8 16.5,8s1.5,0.67 1.5,1.5S17.33,11 16.5,11z" />
+</vector>

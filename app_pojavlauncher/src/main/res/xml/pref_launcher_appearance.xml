@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Ported from CopperLauncher/Copper-Android's pref_launcher_appearance.xml,
+     trimmed to the theming controls only (colour presets + gradient toggle).
+     The custom-background-image controls from upstream were left out - see
+     ThemeManager.java for why. -->
+<androidx.preference.PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <Preference
+        android:key="colour_theme_presets"
+        android:title="@string/preference_colour_presets_title"
+        android:summary="@string/preference_colour_presets_summary"
+        app:icon="@drawable/ic_set_theme" />
+
+    <SwitchPreferenceCompat
+        android:key="enable_bg_gradient"
+        android:title="@string/preference_bg_gradient_title"
+        android:summary="@string/preference_bg_gradient_summary"
+        android:defaultValue="false"
+        app:icon="@drawable/ic_toggle_bg_color" />
+
+    <Preference
+        android:key="colour_theme_reset"
+        android:title="@string/preference_colour_reset" />
+
+</androidx.preference.PreferenceScreen>

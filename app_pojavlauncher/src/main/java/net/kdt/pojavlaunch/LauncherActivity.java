@@ -164,6 +164,8 @@ public class LauncherActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // Apply saved colour theme before layout inflation (ported from Copper-Android)
+        setTheme(net.kdt.pojavlaunch.theme.ThemeManager.getSavedTheme());
         setContentView(R.layout.activity_pojav_launcher);
 
         try {
