@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- New layout for ContentPickerFragment.java, styled to match
+     fragment_manage_mods.xml's header bar for visual consistency. -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="?attr/bgMainDrawable">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_52sdp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingHorizontal="@dimen/padding_medium">
+
+        <ImageButton
+            android:id="@+id/content_picker_back"
+            android:layout_width="@dimen/_38sdp"
+            android:layout_height="@dimen/_38sdp"
+            android:background="?android:attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/ic_arrow_back_white"
+            android:contentDescription="@string/global_back" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginHorizontal="@dimen/padding_moderate"
+            android:textColor="?attr/colorTextPrimary"
+            android:textStyle="bold"
+            android:textSize="@dimen/_14ssp"
+            android:text="@string/content_picker_title" />
+
+        <ImageButton
+            android:id="@+id/content_picker_filters"
+            android:layout_width="@dimen/_38sdp"
+            android:layout_height="@dimen/_38sdp"
+            android:background="?android:attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/ic_px_alt_sliders"
+            android:contentDescription="@string/content_picker_filters" />
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_1sdp"
+        android:background="?attr/colorDivider" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:paddingHorizontal="@dimen/fragment_padding_medium">
+
+        <com.kdt.mcgui.MineButton
+            android:id="@+id/content_picker_mods"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_44sdp"
+            android:layout_marginBottom="@dimen/padding_medium"
+            android:text="@string/mcl_content_mods" />
+
+        <com.kdt.mcgui.MineButton
+            android:id="@+id/content_picker_resourcepacks"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_44sdp"
+            android:layout_marginBottom="@dimen/padding_medium"
+            android:text="@string/mcl_content_resourcepacks" />
+
+        <com.kdt.mcgui.MineButton
+            android:id="@+id/content_picker_shaderpacks"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_44sdp"
+            android:text="@string/mcl_content_shaderpacks" />
+
+    </LinearLayout>
+
+</LinearLayout>

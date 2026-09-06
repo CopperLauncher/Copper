@@ -15,10 +15,14 @@
     <!-- Content manager (browse/manage mods, resourcepacks, shaderpacks), ported from Copper-Android -->
     <string name="global_back">Back</string>
     <string name="global_add">Add</string>
+    <string name="mcl_button_browse_content">Browse Content</string>
+    <string name="mcl_button_manage_content">Manage Content</string>
     <string name="mcl_button_manage_mods">Manage Mods</string>
     <string name="mcl_content_mods">Mods</string>
     <string name="mcl_content_resourcepacks">Resource Packs</string>
     <string name="mcl_content_shaderpacks">Shader Packs</string>
+    <string name="content_picker_title">Browse/Manage Content</string>
+    <string name="content_picker_filters">Filters</string>
     <string name="mod_check_updates">Check for updates</string>
     <string name="mod_update_success">%1$s updated</string>
     <string name="manage_mods_check_update">Check for update</string>

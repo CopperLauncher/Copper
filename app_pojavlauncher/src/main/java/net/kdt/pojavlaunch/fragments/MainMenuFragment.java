@@ -54,6 +54,8 @@ public class MainMenuFragment extends Fragment {
         Button mInstallJarButton = view.findViewById(R.id.install_jar_button);
         Button mShareLogsButton = view.findViewById(R.id.share_logs_button);
         Button mOpenDirectoryButton = view.findViewById(R.id.open_files_button);
+        Button mBrowseContentButton = view.findViewById(R.id.browse_content_button);
+        Button mManageContentButton = view.findViewById(R.id.manage_content_button);
 
         ImageButton mEditProfileButton = view.findViewById(R.id.edit_profile_button);
         Button mPlayButton = view.findViewById(R.id.play_button);
@@ -71,11 +73,21 @@ public class MainMenuFragment extends Fragment {
 
         mOpenDirectoryButton.setOnClickListener((v)-> openGameDirectory(v.getContext()));
 
+        mBrowseContentButton.setOnClickListener(v -> openContentPicker(ContentPickerFragment.MODE_BROWSE));
+        mManageContentButton.setOnClickListener(v -> openContentPicker(ContentPickerFragment.MODE_MANAGE));
+
 
         mNewsButton.setOnLongClickListener((v)->{
             Tools.swapFragment(requireActivity(), GamepadMapperFragment.class, GamepadMapperFragment.TAG, null);
             return true;
         });
+    }
+
+    private void openContentPicker(String mode) {
+        Bundle args = new Bundle();
+        args.putString(ContentPickerFragment.ARG_MODE, mode);
+        Tools.swapFragment(requireActivity(), ContentPickerFragment.class,
+                ContentPickerFragment.TAG + ":" + mode, args);
     }
 
     private void openGameDirectory(Context context) {
