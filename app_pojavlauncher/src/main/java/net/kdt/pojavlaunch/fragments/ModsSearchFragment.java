@@ -296,7 +296,7 @@ public class ModsSearchFragment extends Fragment implements ModItemAdapter.Searc
 
         private File getContentDir() {
             Instance instance = Instances.loadSelectedInstance();
-            File gameDir = instance != null ? instance.getGameDirectory() : Tools.DIR_GAME_NEW;
+            File gameDir = instance != null ? instance.getGameDirectory() : new File(Tools.DIR_GAME_NEW);
             return new File(gameDir, mContentType.folderName);
         }
     }

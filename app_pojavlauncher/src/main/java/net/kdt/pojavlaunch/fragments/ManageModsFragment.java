@@ -61,8 +61,13 @@ public class ManageModsFragment extends Fragment {
     private ContentType mContentType = ContentType.MOD;
     private List<InstalledModAdapter.InstalledMod> mMods;
 
+    // OpenDocumentWithExtension only filters by a single extension (and falls
+    // back to "*/*" for one it doesn't recognise) - it can't filter by both
+    // "jar" and "zip" at once, so this passes an empty string to get the
+    // "all types" fallback, and relies on onImportFilePicked() to validate
+    // the picked file's extension against mContentType.fileExtension itself.
     private final ActivityResultLauncher<Object> mImportLauncher =
-            registerForActivityResult(new OpenDocumentWithExtension(new String[]{"jar", "zip"}),
+            registerForActivityResult(new OpenDocumentWithExtension(""),
                     this::onImportFilePicked);
 
     public ManageModsFragment() {
@@ -274,7 +279,7 @@ public class ManageModsFragment extends Fragment {
 
     private File getContentDir() {
         Instance instance = Instances.loadSelectedInstance();
-        File gameDir = instance != null ? instance.getGameDirectory() : Tools.DIR_GAME_NEW;
+        File gameDir = instance != null ? instance.getGameDirectory() : new File(Tools.DIR_GAME_NEW);
         return new File(gameDir, mContentType.folderName);
     }
 }
