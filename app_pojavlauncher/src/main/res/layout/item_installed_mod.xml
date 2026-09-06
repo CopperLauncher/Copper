@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Adapted from Copper-Android's item_installed_mod.xml; the "switch version"
+     button from upstream was dropped as part of trimming that feature out of
+     this port (see InstalledModAdapter.java). -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:gravity="center_vertical"
+    android:padding="@dimen/padding_small"
+    android:background="@drawable/background_card"
+    android:layout_marginBottom="@dimen/padding_tiny">
+
+    <ImageView
+        android:id="@+id/installed_mod_icon"
+        android:layout_width="@dimen/_36sdp"
+        android:layout_height="@dimen/_36sdp"
+        android:src="@drawable/ic_mod_placeholder"
+        android:contentDescription="@null" />
+
+    <TextView
+        android:id="@+id/installed_mod_title"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:layout_marginStart="@dimen/padding_small"
+        android:textColor="?attr/colorTextPrimary"
+        android:textSize="@dimen/_12ssp"
+        android:maxLines="2"
+        android:ellipsize="end" />
+
+    <ImageView
+        android:id="@+id/installed_mod_update"
+        android:layout_width="@dimen/_24sdp"
+        android:layout_height="@dimen/_24sdp"
+        android:layout_marginEnd="@dimen/padding_small"
+        android:src="@drawable/ic_refresh"
+        android:background="?android:attr/selectableItemBackgroundBorderless"
+        android:contentDescription="@string/manage_mods_check_update" />
+
+    <androidx.appcompat.widget.SwitchCompat
+        android:id="@+id/installed_mod_toggle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/padding_small" />
+
+    <ImageView
+        android:id="@+id/installed_mod_delete"
+        android:layout_width="@dimen/_24sdp"
+        android:layout_height="@dimen/_24sdp"
+        android:src="@drawable/ic_menu_delete_forever"
+        android:background="?android:attr/selectableItemBackgroundBorderless"
+        android:contentDescription="@string/manage_mods_delete" />
+
+</LinearLayout>

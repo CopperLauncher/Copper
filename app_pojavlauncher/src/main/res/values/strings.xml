@@ -12,6 +12,25 @@
     <string name="preference_bg_gradient_summary">Use a gradient background matching the current theme</string>
     <string name="preference_colour_reset">Reset to default</string>
 
+    <!-- Content manager (browse/manage mods, resourcepacks, shaderpacks), ported from Copper-Android -->
+    <string name="global_back">Back</string>
+    <string name="global_add">Add</string>
+    <string name="mcl_button_manage_mods">Manage Mods</string>
+    <string name="mcl_content_mods">Mods</string>
+    <string name="mcl_content_resourcepacks">Resource Packs</string>
+    <string name="mcl_content_shaderpacks">Shader Packs</string>
+    <string name="mod_check_updates">Check for updates</string>
+    <string name="mod_update_success">%1$s updated</string>
+    <string name="manage_mods_check_update">Check for update</string>
+    <string name="manage_mods_delete">Delete</string>
+    <string name="manage_mods_empty">No mods installed for this instance yet</string>
+    <string name="manage_resourcepacks_empty">No resource packs installed for this instance yet</string>
+    <string name="manage_shaderpacks_empty">No shader packs installed for this instance yet</string>
+    <string name="content_import_from_storage">Import from storage</string>
+    <string name="content_import_wrong_type">Please pick a %1$s file</string>
+    <string name="content_import_success">%1$s imported</string>
+    <string name="content_import_failed">Import failed</string>
+
     <!-- Action bar part -->
 
     <!-- Languages list part -->
