@@ -17,8 +17,6 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
 import com.kdt.mcgui.ProgressLayout;
 
 import git.artdeell.mojo.R;
@@ -28,10 +26,9 @@ import net.kdt.pojavlaunch.Tools;
 import net.kdt.pojavlaunch.instances.Instance;
 import net.kdt.pojavlaunch.instances.Instances;
 import net.kdt.pojavlaunch.modloaders.modpacks.ModItemAdapter;
-import net.kdt.pojavlaunch.modloaders.modpacks.api.ApiHandler;
+import net.kdt.pojavlaunch.modloaders.modpacks.api.CommonApi;
 import net.kdt.pojavlaunch.modloaders.modpacks.api.ModLoader;
 import net.kdt.pojavlaunch.modloaders.modpacks.api.ModpackApi;
-import net.kdt.pojavlaunch.modloaders.modpacks.models.Constants;
 import net.kdt.pojavlaunch.modloaders.modpacks.models.ContentType;
 import net.kdt.pojavlaunch.modloaders.modpacks.models.ModDetail;
 import net.kdt.pojavlaunch.modloaders.modpacks.models.ModItem;
@@ -42,25 +39,26 @@ import net.kdt.pojavlaunch.utils.DownloadUtils;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
- * "Browse Content" screen: search Modrinth for mods/resourcepacks/shaderpacks
- * and install them into the currently selected instance.
+ * "Browse Content" screen: search Modrinth + CurseForge for mods/
+ * resourcepacks/shaderpacks and install them (with their required
+ * dependencies) into the currently selected instance.
  *
- * This is a new implementation rather than a straight port of
- * Copper-Android's ModsSearchFragment: that version was built on Amethyst's
- * richer ModItem/ModDetail/CommonApi (which also support CurseForge,
- * dependency auto-installing, and per-version switching), and those classes
- * are shared with Mojo's *existing*, working modpack-creation flow
- * (SearchModFragment / CommonApi / ModrinthApi / CurseforgeApi). Rather than
- * risk that flow by changing those shared classes, this fragment follows the
- * same structure/UI as Mojo's own SearchModFragment (which already searches
- * Modrinth modpacks) and adds a small self-contained ModpackApi
- * implementation (ModsInstallApi, below) that talks to Modrinth directly for
- * the three individual content types. Net effect: CurseForge and multi-
- * version dependency installs aren't part of this port's Browse Content
- * screen (Modrinth-only, single-file installs).
+ * This is a new fragment rather than a straight port of Copper-Android's
+ * ModsSearchFragment (built on Amethyst's own ModItem/ModDetail/CommonApi),
+ * but it now reuses Mojo's real CommonApi/ModrinthApi/CurseforgeApi for
+ * search + version details - see ContentInstallApi below - rather than a
+ * hand-rolled API client. Those three classes gained a handful of small,
+ * additive changes (content-type-aware search, per-version dependency
+ * lists on ModDetail) to support this; see their own commit for what
+ * changed and why it doesn't affect the existing modpack-search flow that
+ * also depends on them. ContentInstallApi itself only overrides
+ * installModpack(), since installing a single mod/resourcepack/shaderpack
+ * file (+ its dependencies) is different enough from unzipping a whole
+ * modpack that reusing CommonApi's installModpack() wasn't an option.
  */
 public class ModsSearchFragment extends Fragment implements ModItemAdapter.SearchResultCallback {
 
@@ -85,7 +83,7 @@ public class ModsSearchFragment extends Fragment implements ModItemAdapter.Searc
     private ProgressBar mSearchProgressBar;
     private TextView mStatusTextView;
     private ColorStateList mDefaultTextColor;
-    private ModsInstallApi mModpackApi;
+    private ContentInstallApi mModpackApi;
     private ContentType mContentType = ContentType.MOD;
 
     private final SearchFilters mSearchFilters = new SearchFilters();
@@ -103,7 +101,7 @@ public class ModsSearchFragment extends Fragment implements ModItemAdapter.Searc
         mSearchFilters.isModpack = false;
         mSearchFilters.contentType = mContentType;
         if (args != null) mSearchFilters.mcVersion = args.getString(ARG_PRESET_MC_VERSION, null);
-        mModpackApi = new ModsInstallApi(mContentType);
+        mModpackApi = new ContentInstallApi(context, mContentType, mSearchFilters);
     }
 
     @Override
@@ -185,107 +183,39 @@ public class ModsSearchFragment extends Fragment implements ModItemAdapter.Searc
     }
 
     /**
-     * Small, self-contained ModpackApi implementation that talks to Modrinth
-     * directly for a single ContentType (mod/resourcepack/shaderpack),
-     * without touching Mojo's shared ModrinthApi/CommonApi (see the class
-     * javadoc above for why). Loader filtering isn't supported - only the
-     * Minecraft-version facet is applied, matching ContentFilterDialog.
+     * Wraps Mojo's real CommonApi (Modrinth + CurseForge) for search/details,
+     * without touching Mojo's shared ModrinthApi/CurseforgeApi/CommonApi
+     * (see the class javadoc above for why) other than the small additive
+     * changes made to them for this feature (see ModDetail/ModrinthApi/
+     * CurseforgeApi) - this class only wraps them.
      */
-    private static class ModsInstallApi implements ModpackApi {
-        private static final String MODRINTH_API = "https://api.modrinth.com/v2";
-        private final ApiHandler mApiHandler = new ApiHandler(MODRINTH_API);
+    private static class ContentInstallApi implements ModpackApi {
+        private final CommonApi mCommonApi;
         private final ContentType mContentType;
+        private final SearchFilters mSearchFilters;
 
-        ModsInstallApi(ContentType contentType) {
+        ContentInstallApi(Context context, ContentType contentType, SearchFilters searchFilters) {
+            mCommonApi = new CommonApi(context.getString(R.string.curseforge_api_key));
             mContentType = contentType;
+            mSearchFilters = searchFilters;
         }
 
         @Override
         public SearchResult searchMod(SearchFilters searchFilters, SearchResult previousPageResult) {
-            int previousOffset = previousPageResult instanceof OffsetSearchResult
-                    ? ((OffsetSearchResult) previousPageResult).offset : 0;
-            if (previousPageResult != null && previousOffset >= previousPageResult.totalResultCount) {
-                OffsetSearchResult empty = new OffsetSearchResult();
-                empty.results = new ModItem[0];
-                empty.totalResultCount = previousPageResult.totalResultCount;
-                empty.offset = previousOffset;
-                return empty;
-            }
-
-            HashMap<String, Object> params = new HashMap<>();
-            StringBuilder facets = new StringBuilder("[");
-            facets.append(String.format("[\"project_type:%s\"]", mContentType.modrinthType));
-            if (searchFilters.mcVersion != null && !searchFilters.mcVersion.isEmpty()) {
-                facets.append(String.format(",[\"versions:%s\"]", searchFilters.mcVersion));
-            }
-            facets.append("]");
-            params.put("facets", facets.toString());
-            params.put("query", searchFilters.name);
-            params.put("limit", 50);
-            params.put("index", "relevance");
-            if (previousPageResult != null) params.put("offset", previousOffset);
-
-            JsonObject response = mApiHandler.get("search", params, JsonObject.class);
-            if (response == null) return null;
-            JsonArray hits = response.getAsJsonArray("hits");
-            if (hits == null) return null;
-
-            ModItem[] items = new ModItem[hits.size()];
-            for (int i = 0; i < hits.size(); i++) {
-                JsonObject hit = hits.get(i).getAsJsonObject();
-                items[i] = new ModItem(
-                        Constants.SOURCE_MODRINTH,
-                        false,
-                        hit.get("project_id").getAsString(),
-                        hit.get("title").getAsString(),
-                        hit.get("description").getAsString(),
-                        hit.get("icon_url").isJsonNull() ? null : hit.get("icon_url").getAsString());
-            }
-
-            OffsetSearchResult result = new OffsetSearchResult();
-            result.results = items;
-            result.offset = previousOffset + hits.size();
-            result.totalResultCount = response.get("total_hits").getAsInt();
-            return result;
+            // CommonApi already searches Modrinth + CurseForge (when a real API key is
+            // configured) and fuses/paginates both, so just delegate straight to it -
+            // it reads searchFilters.contentType itself (see ModrinthApi/CurseforgeApi).
+            return mCommonApi.searchMod(searchFilters, previousPageResult);
         }
 
         @Override
         public ModDetail getModDetails(ModItem item) {
-            JsonArray response = mApiHandler.get(
-                    String.format("project/%s/version", item.id), JsonArray.class);
-            if (response == null) return null;
-
-            String[] names = new String[response.size()];
-            String[] mcNames = new String[response.size()];
-            String[] urls = new String[response.size()];
-            String[] hashes = new String[response.size()];
-
-            for (int i = 0; i < response.size(); i++) {
-                JsonObject version = response.get(i).getAsJsonObject();
-                names[i] = version.get("name").getAsString();
-                mcNames[i] = version.get("game_versions").getAsJsonArray().get(0).getAsString();
-                JsonObject file = version.getAsJsonArray("files").get(0).getAsJsonObject();
-                urls[i] = file.get("url").getAsString();
-                JsonObject hashesObj = file.getAsJsonObject("hashes");
-                hashes[i] = (hashesObj != null && hashesObj.has("sha1"))
-                        ? hashesObj.get("sha1").getAsString() : null;
-            }
-
-            return new ModDetail(item, names, mcNames, urls, hashes);
+            return mCommonApi.getModDetails(item);
         }
 
         @Override
         public ModLoader installModpack(ModDetail modDetail, int selectedVersion) throws IOException {
-            String url = modDetail.versionUrls[selectedVersion];
-            File contentDir = getContentDir();
-            if (!contentDir.isDirectory() && !contentDir.mkdirs()) {
-                throw new IOException("could not create content directory");
-            }
-            String fileName = url.substring(url.lastIndexOf('/') + 1);
-            File destination = new File(contentDir, fileName);
-            ProgressLayout.setProgress(ProgressLayout.INSTALL_MODPACK, 0, R.string.global_waiting);
-            DownloadUtils.downloadFile(url, destination);
-            ProgressLayout.clearProgress(ProgressLayout.INSTALL_MODPACK);
+            installSingleFile(modDetail, selectedVersion, new HashSet<>());
             return null; // no mod loader is involved in installing a single mod/resourcepack/shaderpack
         }
 
@@ -294,15 +224,80 @@ public class ModsSearchFragment extends Fragment implements ModItemAdapter.Searc
             throw new IOException("Local install isn't supported here - use Manage Content's import instead.");
         }
 
+        /**
+         * Downloads modDetail's selectedVersion into this instance's content folder, then
+         * walks its "required" dependencies (see ModDetail.Dependency) and recursively
+         * installs each one the same way. visitedProjectIds prevents installing the same
+         * project twice in one call (dependency cycles, or two mods sharing a dependency)
+         * and is shared across the whole recursive walk.
+         */
+        private void installSingleFile(ModDetail modDetail, int selectedVersion, Set<String> visitedProjectIds) throws IOException {
+            String selfKey = modDetail.apiSource + ":" + modDetail.id;
+            if (!visitedProjectIds.add(selfKey)) return;
+
+            String url = modDetail.versionUrls[selectedVersion];
+            File contentDir = getContentDir();
+            if (!contentDir.isDirectory() && !contentDir.mkdirs()) {
+                throw new IOException("could not create content directory");
+            }
+            String fileName = url.substring(url.lastIndexOf('/') + 1);
+            File destination = uniqueDestination(contentDir, fileName);
+            ProgressLayout.setProgress(ProgressLayout.INSTALL_MODPACK, 0, R.string.global_waiting);
+            try {
+                DownloadUtils.downloadFile(url, destination);
+            } finally {
+                ProgressLayout.clearProgress(ProgressLayout.INSTALL_MODPACK);
+            }
+
+            if (modDetail.dependencies == null || selectedVersion >= modDetail.dependencies.length) return;
+            for (ModDetail.Dependency dep : modDetail.dependencies[selectedVersion]) {
+                if (dep == null || dep.projectId == null) continue;
+                if (!ModDetail.Dependency.TYPE_REQUIRED.equals(dep.type)) continue;
+                String depKey = dep.apiSource + ":" + dep.projectId;
+                if (visitedProjectIds.contains(depKey)) continue;
+
+                try {
+                    ModItem depItem = new ModItem(dep.apiSource, false, dep.projectId, dep.projectId, "", null);
+                    ModDetail depDetail = mCommonApi.getModDetails(depItem);
+                    if (depDetail == null || depDetail.versionUrls.length == 0) continue;
+                    installSingleFile(depDetail, pickBestVersionIndex(depDetail), visitedProjectIds);
+                } catch (Exception e) {
+                    // Best-effort: a dependency we couldn't resolve or install shouldn't
+                    // roll back the main file that already downloaded successfully.
+                }
+            }
+        }
+
+        /** Prefers a version matching the active Minecraft-version filter; falls back to
+         *  the newest version (index 0 - both Modrinth and CurseForge return newest-first). */
+        private int pickBestVersionIndex(ModDetail detail) {
+            if (mSearchFilters.mcVersion != null && !mSearchFilters.mcVersion.isEmpty()) {
+                for (int i = 0; i < detail.mcVersionNames.length; i++) {
+                    if (mSearchFilters.mcVersion.equals(detail.mcVersionNames[i])) return i;
+                }
+            }
+            return 0;
+        }
+
+        /** Appends " (1)", " (2)", etc. before the extension if a file of that name already exists. */
+        private File uniqueDestination(File dir, String name) {
+            File candidate = new File(dir, name);
+            if (!candidate.exists()) return candidate;
+            String base = name, ext = "";
+            int dot = name.lastIndexOf('.');
+            if (dot >= 0) { base = name.substring(0, dot); ext = name.substring(dot); }
+            int count = 1;
+            do {
+                candidate = new File(dir, base + " (" + count + ")" + ext);
+                count++;
+            } while (candidate.exists());
+            return candidate;
+        }
+
         private File getContentDir() {
             Instance instance = Instances.loadSelectedInstance();
             File gameDir = instance != null ? instance.getGameDirectory() : new File(Tools.DIR_GAME_NEW);
             return new File(gameDir, mContentType.folderName);
         }
-    }
-
-    /** SearchResult that also tracks the Modrinth pagination offset. */
-    private static class OffsetSearchResult extends SearchResult {
-        int offset;
     }
 }
