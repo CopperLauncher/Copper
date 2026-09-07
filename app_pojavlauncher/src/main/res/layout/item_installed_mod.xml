@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Adapted from Copper-Android's item_installed_mod.xml; the "switch version"
-     button from upstream was dropped as part of trimming that feature out of
-     this port (see InstalledModAdapter.java). -->
+<!-- Adapted from Copper-Android's item_installed_mod.xml. -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -37,6 +35,15 @@
         android:src="@drawable/ic_refresh"
         android:background="?android:attr/selectableItemBackgroundBorderless"
         android:contentDescription="@string/manage_mods_check_update" />
+
+    <ImageView
+        android:id="@+id/installed_mod_switch_version"
+        android:layout_width="@dimen/_24sdp"
+        android:layout_height="@dimen/_24sdp"
+        android:layout_marginEnd="@dimen/padding_small"
+        android:src="@drawable/ic_swap_horiz"
+        android:background="?android:attr/selectableItemBackgroundBorderless"
+        android:contentDescription="@string/switch_mod_version_title" />
 
     <androidx.appcompat.widget.SwitchCompat
         android:id="@+id/installed_mod_toggle"

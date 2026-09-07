@@ -7,38 +7,52 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
 import git.artdeell.mojo.R;
 
 import net.kdt.pojavlaunch.PojavApplication;
+import net.kdt.pojavlaunch.modloaders.modpacks.ContentInstaller;
 import net.kdt.pojavlaunch.modloaders.modpacks.api.ApiHandler;
+import net.kdt.pojavlaunch.modloaders.modpacks.api.CommonApi;
 import net.kdt.pojavlaunch.modloaders.modpacks.imagecache.ImageReceiver;
 import net.kdt.pojavlaunch.modloaders.modpacks.imagecache.ModIconCache;
+import net.kdt.pojavlaunch.modloaders.modpacks.models.Constants;
 import net.kdt.pojavlaunch.modloaders.modpacks.models.ContentType;
-import net.kdt.pojavlaunch.utils.DownloadUtils;
+import net.kdt.pojavlaunch.modloaders.modpacks.models.ModDetail;
+import net.kdt.pojavlaunch.modloaders.modpacks.models.ModItem;
+import net.kdt.pojavlaunch.utils.Murmur2;
 
 import java.io.File;
-import java.io.IOException;
+import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 
 /**
  * RecyclerView adapter for the "Manage Content" screen — lists the mods/
  * resourcepacks/shaderpacks currently installed in an instance, and lets the
- * user enable/disable (rename to/from ".disabled"), delete, or check-for-update
- * (against Modrinth) each one.
+ * user enable/disable (rename to/from ".disabled"), delete, check-for-update,
+ * or switch version for each one.
  *
- * Ported from Copper-Android's InstalledModAdapter. Trimmed down for this port:
- * no CurseForge lookups (Modrinth-only, matching the rest of this port), and no
- * "switch version" dialog - just install/update/delete/toggle.
+ * Ported from Copper-Android's InstalledModAdapter, with the identification
+ * strategy adapted to reuse Mojo's real API classes (see ContentInstallApi's
+ * javadoc in ModsSearchFragment for why): an installed file's origin is
+ * resolved once (Modrinth by SHA1, falling back to CurseForge by murmur2
+ * fingerprint - same two-step lookup Copper-Android's version used for icon
+ * resolution) into a plain ModItem, and from then on CommonApi.getModDetails()
+ * does the rest, exactly like it already does for Browse Content. This also
+ * means update-check and switch-version share one code path instead of two.
  */
 public class InstalledModAdapter extends RecyclerView.Adapter<InstalledModAdapter.ViewHolder> {
 
     private static final String MODRINTH_API = "https://api.modrinth.com/v2";
+    private static final String CURSEFORGE_API = "https://api.curseforge.com/v1";
 
     public interface ActionListener {
         void onModDeleted(InstalledMod mod);
@@ -50,7 +64,6 @@ public class InstalledModAdapter extends RecyclerView.Adapter<InstalledModAdapte
         public String displayName;
         public boolean enabled;
         public String iconUrl;
-        public String modrinthProjectId; // resolved lazily via version-file hash lookup, may be null
 
         public InstalledMod(File file) {
             this.file = file;
@@ -66,13 +79,17 @@ public class InstalledModAdapter extends RecyclerView.Adapter<InstalledModAdapte
     private final String mMcVersionFilter;
     private final ModIconCache mIconCache = new ModIconCache();
     private final ActionListener mListener;
+    private final Context mAppContext;
+    private final String mCurseforgeApiKey;
 
-    public InstalledModAdapter(List<InstalledMod> mods, ContentType contentType,
+    public InstalledModAdapter(Context context, List<InstalledMod> mods, ContentType contentType,
                                 String mcVersionFilter, ActionListener listener) {
+        mAppContext = context.getApplicationContext();
         mMods = mods;
         mContentType = contentType;
         mMcVersionFilter = mcVersionFilter;
         mListener = listener;
+        mCurseforgeApiKey = context.getString(R.string.curseforge_api_key);
     }
 
     @NonNull
@@ -86,7 +103,6 @@ public class InstalledModAdapter extends RecyclerView.Adapter<InstalledModAdapte
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         InstalledMod mod = mMods.get(position);
-        Context ctx = holder.itemView.getContext();
 
         holder.title.setText(mod.displayName);
         holder.toggle.setChecked(mod.enabled);
@@ -106,6 +122,7 @@ public class InstalledModAdapter extends RecyclerView.Adapter<InstalledModAdapte
         });
 
         holder.updateButton.setOnClickListener(v -> checkForUpdate(mod, holder));
+        holder.switchVersionButton.setOnClickListener(v -> showSwitchVersionDialog(mod, holder));
 
         String iconTag = mod.file.getAbsolutePath();
         holder.icon.setTag(iconTag);
@@ -140,71 +157,169 @@ public class InstalledModAdapter extends RecyclerView.Adapter<InstalledModAdapte
         }
     }
 
+    /** Which content source an installed file was resolved to, and its project id there. */
+    private static final class ResolvedSource {
+        final int apiSource;
+        final String projectId;
+        final String sha1; // only ever set for the Modrinth path - used to detect "already up to date"
+        ResolvedSource(int apiSource, String projectId, String sha1) {
+            this.apiSource = apiSource;
+            this.projectId = projectId;
+            this.sha1 = sha1;
+        }
+    }
+
     /**
-     * Looks up this file's SHA1 on Modrinth's version-file endpoint to find the
-     * matching project, then checks whether a newer version exists for the
-     * currently selected/filtered Minecraft version. On a hit, downloads and
-     * replaces the file in place.
+     * Identifies which project an installed file came from: tries Modrinth first (by SHA1,
+     * via its version_file endpoint), then falls back to CurseForge (by murmur2 fingerprint,
+     * via its fingerprints endpoint) if a real API key is configured. Returns null if neither
+     * source recognises the file. Runs blocking network I/O - call off the main thread.
      */
-    private void checkForUpdate(InstalledMod mod, ViewHolder holder) {
+    @Nullable
+    private ResolvedSource resolveSource(File file) {
+        try {
+            String sha1 = org.apache.commons.codec.binary.Hex.encodeHexString(
+                    net.kdt.pojavlaunch.utils.HashUtils.fileHash(MessageDigest.getInstance("SHA-1"), file));
+            HashMap<String, Object> query = new HashMap<>();
+            query.put("algorithm", "sha1");
+            ModrinthVersion version = ApiHandler.getFullUrl(
+                    MODRINTH_API + "/version_file/" + sha1, query, ModrinthVersion.class);
+            if (version != null && version.project_id != null) {
+                return new ResolvedSource(Constants.SOURCE_MODRINTH, version.project_id, sha1);
+            }
+        } catch (Exception ignored) {}
+
+        if (mCurseforgeApiKey == null || mCurseforgeApiKey.isEmpty() || "DUMMY".equals(mCurseforgeApiKey)) {
+            return null;
+        }
+        try {
+            long fingerprint = Murmur2.hashFile(file);
+            com.google.gson.JsonArray fingerprints = new com.google.gson.JsonArray();
+            fingerprints.add(fingerprint);
+            com.google.gson.JsonObject body = new com.google.gson.JsonObject();
+            body.add("fingerprints", fingerprints);
+
+            HashMap<String, String> headers = new HashMap<>();
+            headers.put("x-api-key", mCurseforgeApiKey);
+            headers.put("Content-Type", "application/json");
+            headers.put("Accept", "application/json");
+
+            String responseRaw = ApiHandler.postRaw(headers, CURSEFORGE_API + "/fingerprints", body.toString());
+            if (responseRaw == null) return null;
+            com.google.gson.JsonObject response = com.google.gson.JsonParser.parseString(responseRaw).getAsJsonObject();
+            if (!response.has("data")) return null;
+            com.google.gson.JsonObject data = response.getAsJsonObject("data");
+            com.google.gson.JsonArray exactMatches = data.has("exactMatches") ? data.getAsJsonArray("exactMatches") : null;
+            if (exactMatches == null || exactMatches.size() == 0) return null;
+
+            com.google.gson.JsonObject match = exactMatches.get(0).getAsJsonObject();
+            if (!match.has("file")) return null;
+            com.google.gson.JsonObject file2 = match.getAsJsonObject("file");
+            if (!file2.has("modId")) return null;
+            return new ResolvedSource(Constants.SOURCE_CURSEFORGE, String.valueOf(file2.get("modId").getAsInt()), null);
+        } catch (Exception ignored) {
+            return null;
+        }
+    }
+
+    /**
+     * Resolves the installed file's source/project, fetches its full version list via
+     * CommonApi (Modrinth or CurseForge, whichever matched), and hands the result to
+     * onResolved on the calling (background) thread. Shared by checkForUpdate() and
+     * showSwitchVersionDialog(). Toasts and returns early on any failure.
+     */
+    private void resolveAndFetchDetails(InstalledMod mod, ViewHolder holder,
+                                         ResolvedDetailsCallback onResolved) {
         PojavApplication.sExecutorService.execute(() -> {
+            ResolvedSource source = resolveSource(mod.file);
+            if (source == null) {
+                holder.itemView.post(() -> Toast.makeText(mAppContext,
+                        R.string.mod_source_not_found, Toast.LENGTH_SHORT).show());
+                return;
+            }
             try {
-                String sha1 = org.apache.commons.codec.binary.Hex.encodeHexString(
-                        net.kdt.pojavlaunch.utils.HashUtils.fileHash(
-                                java.security.MessageDigest.getInstance("SHA-1"), mod.file));
-                HashMap<String, Object> query = new HashMap<>();
-                query.put("algorithm", "sha1");
-                ModrinthVersion version = ApiHandler.getFullUrl(
-                        MODRINTH_API + "/version_file/" + sha1, query, ModrinthVersion.class);
-                if (version == null || version.files == null || version.files.isEmpty()) return;
-
-                java.util.HashMap<String, Object> query2 = new java.util.HashMap<>();
-                if (mMcVersionFilter != null) query2.put("loaders", "[]");
-                ModrinthVersion[] versions = ApiHandler.getFullUrl(
-                        MODRINTH_API + "/project/" + version.project_id + "/version",
-                        ModrinthVersion[].class);
-                if (versions == null) return;
-
-                ModrinthVersion best = null;
-                for (ModrinthVersion candidate : versions) {
-                    if (mMcVersionFilter != null && candidate.game_versions != null
-                            && !java.util.Arrays.asList(candidate.game_versions).contains(mMcVersionFilter)) {
-                        continue;
-                    }
-                    best = candidate;
-                    break; // Modrinth returns newest-first
+                CommonApi commonApi = new CommonApi(mCurseforgeApiKey);
+                ModItem item = new ModItem(source.apiSource, false, source.projectId, source.projectId, "", null);
+                ModDetail detail = commonApi.getModDetails(item);
+                if (detail == null || detail.versionUrls.length == 0) {
+                    holder.itemView.post(() -> Toast.makeText(mAppContext,
+                            R.string.mod_source_not_found, Toast.LENGTH_SHORT).show());
+                    return;
                 }
-                if (best == null || best.id.equals(version.id) || best.files == null || best.files.isEmpty()) {
-                    return; // already up to date, or nothing compatible
-                }
-
-                ModrinthFile file = best.files.get(0);
-                File tmp = File.createTempFile("update", mContentType.fileExtension, mod.file.getParentFile());
-                DownloadUtils.downloadFile(file.url, tmp);
-                if (!mod.file.delete()) throw new IOException("could not remove old file");
-                File finalFile = new File(mod.file.getParentFile(), file.filename);
-                if (!tmp.renameTo(finalFile)) throw new IOException("could not rename downloaded update");
-
-                mod.file = finalFile;
-                mod.displayName = file.filename;
-                if (mListener != null) mListener.onModUpdated(mod);
-                holder.itemView.post(() -> notifyItemChanged(holder.getBindingAdapterPosition()));
-            } catch (Exception ignored) {
-                // Best-effort: leave the existing file untouched on any failure.
+                onResolved.onResolved(commonApi, detail, source);
+            } catch (Exception e) {
+                holder.itemView.post(() -> Toast.makeText(mAppContext,
+                        R.string.mod_source_not_found, Toast.LENGTH_SHORT).show());
             }
         });
+    }
+
+    private interface ResolvedDetailsCallback {
+        void onResolved(CommonApi commonApi, ModDetail detail, ResolvedSource source);
+    }
+
+    /** Checks whether a newer compatible version exists and, if so, downloads it (along with
+     *  any new required dependencies) and replaces the old file. */
+    private void checkForUpdate(InstalledMod mod, ViewHolder holder) {
+        resolveAndFetchDetails(mod, holder, (commonApi, detail, source) -> {
+            int bestIndex = ContentInstaller.pickBestVersionIndex(detail, mMcVersionFilter);
+            String bestHash = detail.versionHashes != null && bestIndex < detail.versionHashes.length
+                    ? detail.versionHashes[bestIndex] : null;
+            if (source.sha1 != null && source.sha1.equalsIgnoreCase(bestHash)) {
+                holder.itemView.post(() -> Toast.makeText(mAppContext,
+                        R.string.mod_already_up_to_date, Toast.LENGTH_SHORT).show());
+                return;
+            }
+            installReplacement(mod, holder, commonApi, detail, bestIndex);
+        });
+    }
+
+    /** Lets the user pick any version from the resolved project's full version list and
+     *  installs it in place of the current file. */
+    private void showSwitchVersionDialog(InstalledMod mod, ViewHolder holder) {
+        resolveAndFetchDetails(mod, holder, (commonApi, detail, source) ->
+                holder.itemView.post(() -> new androidx.appcompat.app.AlertDialog.Builder(holder.itemView.getContext())
+                        .setTitle(R.string.switch_mod_version_title)
+                        .setItems(detail.versionNames, (dialog, which) ->
+                                PojavApplication.sExecutorService.execute(() ->
+                                        installReplacement(mod, holder, commonApi, detail, which)))
+                        .setNegativeButton(android.R.string.cancel, null)
+                        .show()));
+    }
+
+    private void installReplacement(InstalledMod mod, ViewHolder holder, CommonApi commonApi,
+                                     ModDetail detail, int versionIndex) {
+        try {
+            File contentDir = mod.file.getParentFile();
+            String oldPath = mod.file.getAbsolutePath();
+            File oldFile = mod.file;
+
+            ContentInstaller.installWithDependencies(commonApi, contentDir, detail, versionIndex,
+                    mMcVersionFilter, new HashSet<>());
+
+            oldFile.delete();
+
+            String url = detail.versionUrls[versionIndex];
+            String newFileName = url.substring(url.lastIndexOf('/') + 1);
+            File newFile = new File(contentDir, newFileName);
+
+            mod.file = newFile;
+            mod.displayName = newFileName;
+            if (mListener != null) mListener.onModUpdated(mod);
+            holder.itemView.post(() -> {
+                Toast.makeText(mAppContext,
+                        mAppContext.getString(R.string.mod_update_success, mod.displayName),
+                        Toast.LENGTH_SHORT).show();
+                notifyItemChanged(holder.getBindingAdapterPosition());
+            });
+        } catch (Exception e) {
+            holder.itemView.post(() -> Toast.makeText(mAppContext, R.string.mod_update_failed, Toast.LENGTH_SHORT).show());
+        }
     }
 
     static class ModrinthVersion {
         String id;
         String project_id;
-        String[] game_versions;
-        List<ModrinthFile> files;
-    }
-
-    static class ModrinthFile {
-        String url;
-        String filename;
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {
@@ -212,6 +327,7 @@ public class InstalledModAdapter extends RecyclerView.Adapter<InstalledModAdapte
         final ImageView icon;
         final androidx.appcompat.widget.SwitchCompat toggle;
         final ImageView updateButton;
+        final ImageView switchVersionButton;
         final ImageView deleteButton;
 
         ViewHolder(@NonNull View itemView) {
@@ -220,6 +336,7 @@ public class InstalledModAdapter extends RecyclerView.Adapter<InstalledModAdapte
             icon = itemView.findViewById(R.id.installed_mod_icon);
             toggle = itemView.findViewById(R.id.installed_mod_toggle);
             updateButton = itemView.findViewById(R.id.installed_mod_update);
+            switchVersionButton = itemView.findViewById(R.id.installed_mod_switch_version);
             deleteButton = itemView.findViewById(R.id.installed_mod_delete);
         }
     }

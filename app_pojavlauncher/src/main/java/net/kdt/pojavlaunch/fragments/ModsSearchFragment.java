@@ -17,8 +17,6 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.kdt.mcgui.ProgressLayout;
-
 import git.artdeell.mojo.R;
 
 import net.kdt.pojavlaunch.PojavApplication;
@@ -26,6 +24,7 @@ import net.kdt.pojavlaunch.Tools;
 import net.kdt.pojavlaunch.instances.Instance;
 import net.kdt.pojavlaunch.instances.Instances;
 import net.kdt.pojavlaunch.modloaders.modpacks.ModItemAdapter;
+import net.kdt.pojavlaunch.modloaders.modpacks.ContentInstaller;
 import net.kdt.pojavlaunch.modloaders.modpacks.api.CommonApi;
 import net.kdt.pojavlaunch.modloaders.modpacks.api.ModLoader;
 import net.kdt.pojavlaunch.modloaders.modpacks.api.ModpackApi;
@@ -35,12 +34,10 @@ import net.kdt.pojavlaunch.modloaders.modpacks.models.ModItem;
 import net.kdt.pojavlaunch.modloaders.modpacks.models.SearchFilters;
 import net.kdt.pojavlaunch.modloaders.modpacks.models.SearchResult;
 import net.kdt.pojavlaunch.progresskeeper.ProgressKeeper;
-import net.kdt.pojavlaunch.utils.DownloadUtils;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.HashSet;
-import java.util.Set;
 
 /**
  * "Browse Content" screen: search Modrinth + CurseForge for mods/
@@ -215,83 +212,14 @@ public class ModsSearchFragment extends Fragment implements ModItemAdapter.Searc
 
         @Override
         public ModLoader installModpack(ModDetail modDetail, int selectedVersion) throws IOException {
-            installSingleFile(modDetail, selectedVersion, new HashSet<>());
+            ContentInstaller.installWithDependencies(mCommonApi, getContentDir(), modDetail, selectedVersion,
+                    mSearchFilters.mcVersion, new HashSet<>());
             return null; // no mod loader is involved in installing a single mod/resourcepack/shaderpack
         }
 
         @Override
         public ModLoader installLocalModpack(String modpackName, File modpackFile, String icon) throws IOException {
             throw new IOException("Local install isn't supported here - use Manage Content's import instead.");
-        }
-
-        /**
-         * Downloads modDetail's selectedVersion into this instance's content folder, then
-         * walks its "required" dependencies (see ModDetail.Dependency) and recursively
-         * installs each one the same way. visitedProjectIds prevents installing the same
-         * project twice in one call (dependency cycles, or two mods sharing a dependency)
-         * and is shared across the whole recursive walk.
-         */
-        private void installSingleFile(ModDetail modDetail, int selectedVersion, Set<String> visitedProjectIds) throws IOException {
-            String selfKey = modDetail.apiSource + ":" + modDetail.id;
-            if (!visitedProjectIds.add(selfKey)) return;
-
-            String url = modDetail.versionUrls[selectedVersion];
-            File contentDir = getContentDir();
-            if (!contentDir.isDirectory() && !contentDir.mkdirs()) {
-                throw new IOException("could not create content directory");
-            }
-            String fileName = url.substring(url.lastIndexOf('/') + 1);
-            File destination = uniqueDestination(contentDir, fileName);
-            ProgressLayout.setProgress(ProgressLayout.INSTALL_MODPACK, 0, R.string.global_waiting);
-            try {
-                DownloadUtils.downloadFile(url, destination);
-            } finally {
-                ProgressLayout.clearProgress(ProgressLayout.INSTALL_MODPACK);
-            }
-
-            if (modDetail.dependencies == null || selectedVersion >= modDetail.dependencies.length) return;
-            for (ModDetail.Dependency dep : modDetail.dependencies[selectedVersion]) {
-                if (dep == null || dep.projectId == null) continue;
-                if (!ModDetail.Dependency.TYPE_REQUIRED.equals(dep.type)) continue;
-                String depKey = dep.apiSource + ":" + dep.projectId;
-                if (visitedProjectIds.contains(depKey)) continue;
-
-                try {
-                    ModItem depItem = new ModItem(dep.apiSource, false, dep.projectId, dep.projectId, "", null);
-                    ModDetail depDetail = mCommonApi.getModDetails(depItem);
-                    if (depDetail == null || depDetail.versionUrls.length == 0) continue;
-                    installSingleFile(depDetail, pickBestVersionIndex(depDetail), visitedProjectIds);
-                } catch (Exception e) {
-                    // Best-effort: a dependency we couldn't resolve or install shouldn't
-                    // roll back the main file that already downloaded successfully.
-                }
-            }
-        }
-
-        /** Prefers a version matching the active Minecraft-version filter; falls back to
-         *  the newest version (index 0 - both Modrinth and CurseForge return newest-first). */
-        private int pickBestVersionIndex(ModDetail detail) {
-            if (mSearchFilters.mcVersion != null && !mSearchFilters.mcVersion.isEmpty()) {
-                for (int i = 0; i < detail.mcVersionNames.length; i++) {
-                    if (mSearchFilters.mcVersion.equals(detail.mcVersionNames[i])) return i;
-                }
-            }
-            return 0;
-        }
-
-        /** Appends " (1)", " (2)", etc. before the extension if a file of that name already exists. */
-        private File uniqueDestination(File dir, String name) {
-            File candidate = new File(dir, name);
-            if (!candidate.exists()) return candidate;
-            String base = name, ext = "";
-            int dot = name.lastIndexOf('.');
-            if (dot >= 0) { base = name.substring(0, dot); ext = name.substring(dot); }
-            int count = 1;
-            do {
-                candidate = new File(dir, base + " (" + count + ")" + ext);
-                count++;
-            } while (candidate.exists());
-            return candidate;
         }
 
         private File getContentDir() {

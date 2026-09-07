@@ -110,7 +110,7 @@ public class ManageModsFragment extends Fragment {
         File contentDir = getContentDir();
         mMods = InstalledModAdapter.scan(contentDir);
         String[] filter = resolveFilter();
-        mAdapter = new InstalledModAdapter(mMods, mContentType, filter[0].isEmpty() ? null : filter[0],
+        mAdapter = new InstalledModAdapter(requireContext(), mMods, mContentType, filter[0].isEmpty() ? null : filter[0],
                 new InstalledModAdapter.ActionListener() {
                     @Override
                     public void onModDeleted(InstalledModAdapter.InstalledMod mod) {
