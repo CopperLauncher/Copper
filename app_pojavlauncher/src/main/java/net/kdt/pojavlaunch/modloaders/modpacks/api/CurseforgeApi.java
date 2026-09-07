@@ -58,7 +58,7 @@ public class CurseforgeApi implements ModpackApi{
 
         HashMap<String, Object> params = new HashMap<>();
         params.put("gameId", CURSEFORGE_MC_GAME_ID);
-        params.put("classId", searchFilters.isModpack ? CURSEFORGE_MODPACK_CLASS_ID : CURSEFORGE_MOD_CLASS_ID);
+        params.put("classId", searchFilters.isModpack ? CURSEFORGE_MODPACK_CLASS_ID : searchFilters.contentType.curseforgeClassId);
         params.put("searchFilter", searchFilters.name);
         params.put("sortField", CURSEFORGE_SORT_RELEVANCY);
         params.put("sortOrder", "desc");
@@ -112,6 +112,7 @@ public class CurseforgeApi implements ModpackApi{
         String[] mcVersionNames = new String[length];
         String[] versionUrls = new String[length];
         String[] hashes = new String[length];
+        ModDetail.Dependency[][] dependencies = new ModDetail.Dependency[length][];
         for(int i = 0; i < allModDetails.size(); i++) {
             JsonObject modDetail = allModDetails.get(i);
             versionNames[i] = modDetail.get("displayName").getAsString();
@@ -130,8 +131,31 @@ public class CurseforgeApi implements ModpackApi{
             }
 
             hashes[i] = getSha1FromModData(modDetail);
+            dependencies[i] = parseDependencies(modDetail);
         }
-        return new ModDetail(item, versionNames, mcVersionNames, versionUrls, hashes);
+        return new ModDetail(item, versionNames, mcVersionNames, versionUrls, hashes, dependencies);
+    }
+
+    /** Reads a file's "dependencies" array (modId + relationType), if present. relationType 3
+     *  is "RequiredDependency" per CurseForge's own file-relation-type enum; everything else
+     *  maps to optional/incompatible so it's never auto-installed. Added for the mod/
+     *  resourcepack/shaderpack "Browse Content" screen's automatic dependency installs;
+     *  harmless for existing modpack-search callers, which never read ModDetail.dependencies. */
+    private ModDetail.Dependency[] parseDependencies(JsonObject fileInfo) {
+        JsonArray depsArray = fileInfo.getAsJsonArray("dependencies");
+        if (depsArray == null) return new ModDetail.Dependency[0];
+        ArrayList<ModDetail.Dependency> result = new ArrayList<>(depsArray.size());
+        for (JsonElement element : depsArray) {
+            JsonObject dep = element.getAsJsonObject();
+            if (!dep.has("modId") || dep.get("modId").isJsonNull()) continue;
+            String projectId = String.valueOf(dep.get("modId").getAsInt());
+            int relationType = dep.has("relationType") ? dep.get("relationType").getAsInt() : -1;
+            String type = relationType == 3 ? ModDetail.Dependency.TYPE_REQUIRED
+                    : relationType == 5 ? ModDetail.Dependency.TYPE_INCOMPATIBLE
+                    : ModDetail.Dependency.TYPE_OPTIONAL;
+            result.add(new ModDetail.Dependency(Constants.SOURCE_CURSEFORGE, projectId, type));
+        }
+        return result.toArray(new ModDetail.Dependency[0]);
     }
 
     @Override

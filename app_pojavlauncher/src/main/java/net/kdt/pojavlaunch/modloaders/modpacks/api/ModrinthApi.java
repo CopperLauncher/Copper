@@ -50,7 +50,8 @@ public class ModrinthApi implements ModpackApi{
         HashMap<String, Object> params = new HashMap<>();
         StringBuilder facetString = new StringBuilder();
         facetString.append("[");
-        facetString.append(String.format("[\"project_type:%s\"]", searchFilters.isModpack ? "modpack" : "mod"));
+        facetString.append(String.format("[\"project_type:%s\"]",
+                searchFilters.isModpack ? "modpack" : searchFilters.contentType.modrinthType));
         if(searchFilters.mcVersion != null && !searchFilters.mcVersion.isEmpty())
             facetString.append(String.format(",[\"versions:%s\"]", searchFilters.mcVersion));
         facetString.append("]");
@@ -95,6 +96,7 @@ public class ModrinthApi implements ModpackApi{
         String[] mcNames = new String[response.size()];
         String[] urls = new String[response.size()];
         String[] hashes = new String[response.size()];
+        ModDetail.Dependency[][] dependencies = new ModDetail.Dependency[response.size()][];
 
         for (int i=0; i<response.size(); ++i) {
             JsonObject version = response.get(i).getAsJsonObject();
@@ -106,13 +108,33 @@ public class ModrinthApi implements ModpackApi{
                     .get("hashes").getAsJsonObject();
             if(hashesMap == null || hashesMap.get("sha1") == null){
                 hashes[i] = null;
-                continue;
+            } else {
+                hashes[i] = hashesMap.get("sha1").getAsString();
             }
 
-            hashes[i] = hashesMap.get("sha1").getAsString();
+            dependencies[i] = parseDependencies(version);
         }
 
-        return new ModDetail(item, names, mcNames, urls, hashes);
+        return new ModDetail(item, names, mcNames, urls, hashes, dependencies);
+    }
+
+    /** Reads a version's "dependencies" array (project_id + dependency_type), if present.
+     *  Added for the mod/resourcepack/shaderpack "Browse Content" screen's automatic
+     *  dependency installs; harmless for existing modpack-search callers, which never
+     *  read ModDetail.dependencies. */
+    private ModDetail.Dependency[] parseDependencies(JsonObject version) {
+        JsonArray depsArray = version.getAsJsonArray("dependencies");
+        if (depsArray == null) return new ModDetail.Dependency[0];
+        ModDetail.Dependency[] result = new ModDetail.Dependency[depsArray.size()];
+        for (int i = 0; i < depsArray.size(); i++) {
+            JsonObject dep = depsArray.get(i).getAsJsonObject();
+            String projectId = dep.has("project_id") && !dep.get("project_id").isJsonNull()
+                    ? dep.get("project_id").getAsString() : null;
+            String type = dep.has("dependency_type") && !dep.get("dependency_type").isJsonNull()
+                    ? dep.get("dependency_type").getAsString() : ModDetail.Dependency.TYPE_OPTIONAL;
+            result[i] = new ModDetail.Dependency(Constants.SOURCE_MODRINTH, projectId, type);
+        }
+        return result;
     }
 
     @Override
