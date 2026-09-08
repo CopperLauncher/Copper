@@ -88,6 +88,23 @@
                 android:text="@string/mcl_button_open_directory"
 
                 app:layout_constraintTop_toBottomOf="@id/share_logs_button" />
+
+            <!-- Content manager entry points, ported from Copper-Android -->
+            <com.kdt.mcgui.LauncherMenuButton
+                android:id="@+id/browse_content_button"
+                style="@style/LauncherMenuButton.Universal"
+                android:layout_width="match_parent"
+                android:drawableStart="@drawable/ic_mod_placeholder"
+                android:text="@string/mcl_button_browse_content"
+                app:layout_constraintTop_toBottomOf="@id/open_files_button" />
+
+            <com.kdt.mcgui.LauncherMenuButton
+                android:id="@+id/manage_content_button"
+                style="@style/LauncherMenuButton.Universal"
+                android:layout_width="match_parent"
+                android:drawableStart="@drawable/ic_folder"
+                android:text="@string/mcl_button_manage_content"
+                app:layout_constraintTop_toBottomOf="@id/browse_content_button" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
 
