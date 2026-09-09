@@ -35,7 +35,7 @@
     <string name="content_import_success">%1$s imported</string>
     <string name="content_import_failed">Import failed</string>
     <string name="switch_mod_version_title">Switch version</string>
-    <string name="mod_source_not_found">Couldn't find this file's source (not on Modrinth or CurseForge)</string>
+    <string name="mod_source_not_found">Couldn\'t find this file\'s source (not on Modrinth or CurseForge)</string>
     <string name="mod_already_up_to_date">Already up to date</string>
     <string name="mod_update_failed">Update failed</string>
 
