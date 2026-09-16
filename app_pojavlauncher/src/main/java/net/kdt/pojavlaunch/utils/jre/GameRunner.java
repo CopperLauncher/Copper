@@ -287,9 +287,14 @@ public class GameRunner {
 
         Log.i("GameRunner", "Running with "+ launchArgs.toString());
 
+        String mainClass = versionInfo.mainClass;
+        // Since this function never returns, it's best to explicitly release this.
+        // I profiled it and it does actually work.
+        versionInfo = null;
+
         try {
             JavaRunner.nativeSetupExit(activity);
-            JavaRunner.startJvm(runtime, javaArgList, launchClassPath, versionInfo.mainClass, launchArgs);
+            JavaRunner.startJvm(runtime, javaArgList, launchClassPath, mainClass, launchArgs);
         }catch (VMLoadException e) {
             LifecycleAwareAlertDialog.DialogCreator dialogCreator = (dialog, builder) ->
                 builder.setMessage(e.toString(activity)).setPositiveButton(android.R.string.ok, (d, w)->{});
