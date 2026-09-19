@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/search_modpack_download_error"
-        android:textColor="#FFFF0000"
+        android:textColor="?attr/colorError"
         android:visibility="gone"
         app:layout_constraintTop_toTopOf="parent" />
 

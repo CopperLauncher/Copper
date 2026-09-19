@@ -1,6 +1,7 @@
 package net.kdt.pojavlaunch.prefs.screens;
 
 
+import net.kdt.pojavlaunch.utils.ThemeColors;
 import android.Manifest;
 import android.app.Activity;
 import android.content.SharedPreferences;
@@ -15,6 +16,7 @@ import androidx.preference.PreferenceFragmentCompat;
 import net.kdt.pojavlaunch.LauncherActivity;
 import git.artdeell.mojo.R;
 import net.kdt.pojavlaunch.prefs.LauncherPreferences;
+import net.kdt.pojavlaunch.utils.ThemeManager;
 
 /**
  * Preference for the main screen, any sub-screen should inherit this class for consistent behavior,
@@ -25,7 +27,7 @@ public class LauncherPreferenceFragment extends PreferenceFragmentCompat impleme
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        view.setBackgroundColor(getResources().getColor(R.color.background_app));
+        view.setBackgroundColor(ThemeColors.surface(view.getContext()));
         super.onViewCreated(view, savedInstanceState);
     }
 
@@ -72,6 +74,12 @@ public class LauncherPreferenceFragment extends PreferenceFragmentCompat impleme
     @Override
     public void onSharedPreferenceChanged(SharedPreferences p, String s) {
         LauncherPreferences.loadPreferences(getContext());
+        if(ThemeManager.PREF_THEME_MODE.equals(s)) {
+            ThemeManager.applyThemeMode(p.getString(s, "system"));
+        }else if(ThemeManager.PREF_DYNAMIC_COLOR.equals(s)) {
+            Activity activity = getActivity();
+            if(activity != null) activity.recreate();
+        }
     }
 
     protected Preference requirePreference(CharSequence key) {

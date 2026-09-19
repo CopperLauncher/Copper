@@ -1,5 +1,7 @@
 package net.kdt.pojavlaunch;
 
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import net.kdt.pojavlaunch.utils.ThemeColors;
 import static android.os.Build.VERSION.SDK_INT;
 import static net.kdt.pojavlaunch.PojavApplication.sExecutorService;
 
@@ -261,7 +263,7 @@ public final class Tools {
         int bgColor;
         // The status bars are completely transparent and will take their color from the inset view
         // background drawable.
-        if(!noSystemBars) bgColor = activity.getResources().getColor(R.color.background_status_bar);
+        if(!noSystemBars) bgColor = ThemeColors.surfaceContainer(activity);
         else bgColor = Color.BLACK;
 
         // On API 35 onwards, apps are edge-to-edge by default and are controlled entirely though the
@@ -371,7 +373,7 @@ public final class Tools {
 
         Runnable runnable = () -> {
             final String errMsg = showMore ? printToString(e) : rolledMessage != null ? rolledMessage : e.getMessage();
-            AlertDialog.Builder builder = new AlertDialog.Builder(ctx)
+            AlertDialog.Builder builder = new MaterialAlertDialogBuilder(ctx)
                     .setTitle(titleId)
                     .setMessage(errMsg)
                     .setPositiveButton(android.R.string.ok, (p1, p2) -> {
@@ -440,7 +442,7 @@ public final class Tools {
     }
 
     public static void dialog(final Context context, final CharSequence title, final CharSequence message) {
-        new AlertDialog.Builder(context)
+        new MaterialAlertDialogBuilder(context)
                 .setTitle(title)
                 .setMessage(message)
                 .setPositiveButton(android.R.string.ok, null)
@@ -448,7 +450,7 @@ public final class Tools {
     }
 
     public static void dialog(final Context context, final int title, final int message) {
-        new AlertDialog.Builder(context)
+        new MaterialAlertDialogBuilder(context)
                 .setTitle(title)
                 .setMessage(message)
                 .setPositiveButton(android.R.string.ok, null)

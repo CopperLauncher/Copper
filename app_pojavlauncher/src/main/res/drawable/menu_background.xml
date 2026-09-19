@@ -5,5 +5,5 @@
     <corners
     android:radius="5dp"/>
     <solid
-    android:color="#272727" />
+    android:color="?attr/colorSurfaceContainerHigh" />
 </shape>

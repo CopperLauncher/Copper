@@ -1,5 +1,6 @@
 package net.kdt.pojavlaunch.lifecycle;
 
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import android.content.Context;
 import android.content.DialogInterface;
 
@@ -38,7 +39,7 @@ public abstract class LifecycleAwareAlertDialog implements LifecycleEventObserve
             dialogHidden(mLifecycleEnded);
             return;
         }
-        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        AlertDialog.Builder builder = new MaterialAlertDialogBuilder(context);
         // Install the default cancel/dismiss handling
         builder.setOnDismissListener(wrapDismissListener(null));
         dialogCreator.createDialog(this, builder);

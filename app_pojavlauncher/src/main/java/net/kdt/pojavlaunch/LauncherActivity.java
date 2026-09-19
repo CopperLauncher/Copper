@@ -1,5 +1,6 @@
 package net.kdt.pojavlaunch;
 
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import static android.content.res.Configuration.ORIENTATION_PORTRAIT;
 import android.Manifest;
 import android.app.NotificationManager;
@@ -301,7 +302,7 @@ public class LauncherActivity extends BaseActivity {
             Intent i = getPackageManager().getLaunchIntentForPackage(s);
             if(i == null) continue;
             Tools.runOnUiThread(() ->
-                    new AlertDialog.Builder(this)
+                    new MaterialAlertDialogBuilder(this)
                         .setTitle(R.string.migration_progress_warning_title)
                         .setMessage(R.string.migration_notice)
                         .setPositiveButton(android.R.string.ok, (d, button) -> LauncherPreferences.DEFAULT_PREF.edit().putBoolean("migrationNotice", false).apply())
@@ -312,7 +313,7 @@ public class LauncherActivity extends BaseActivity {
     }
 
     private void showNotificationPermissionReasoning() {
-        new AlertDialog.Builder(this)
+        new MaterialAlertDialogBuilder(this)
                 .setTitle(R.string.notification_permission_dialog_title)
                 .setMessage(R.string.notification_permission_dialog_text)
                 .setPositiveButton(android.R.string.ok, (d, w) ->

@@ -1,5 +1,6 @@
 package net.kdt.pojavlaunch;
 
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import static net.kdt.pojavlaunch.Tools.shareLog;
 
 import android.annotation.SuppressLint;
@@ -32,7 +33,7 @@ public class ExitActivity extends AppCompatActivity {
 
         String message = isSignal ? getString(R.string.mcn_abort_title) : getString(R.string.mcn_exit_title, code);
 
-        new AlertDialog.Builder(this)
+        new MaterialAlertDialogBuilder(this)
                 .setMessage(message)
                 .setPositiveButton(R.string.main_share_logs, (dialog, which) -> shareLog(this))
                 .setOnDismissListener(dialog -> ExitActivity.this.finish())

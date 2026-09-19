@@ -1,16 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- Static Material 3 fallback palette (seed #B87333), used when dynamic color is unavailable or disabled. -->
 <resources>
+    <color name="md_primary">#855426</color>
+    <color name="md_on_primary">#FFF7F4</color>
+    <color name="md_primary_container">#FEBC85</color>
+    <color name="md_on_primary_container">#63370B</color>
+    <color name="md_secondary">#755A44</color>
+    <color name="md_on_secondary">#FFF7F4</color>
+    <color name="md_secondary_container">#FFDCC2</color>
+    <color name="md_on_secondary_container">#664D38</color>
+    <color name="md_tertiary">#65612A</color>
+    <color name="md_on_tertiary">#FFFADA</color>
+    <color name="md_tertiary_container">#FDF6B0</color>
+    <color name="md_on_tertiary_container">#615D27</color>
+    <color name="md_error">#A73B21</color>
+    <color name="md_on_error">#FFF7F6</color>
+    <color name="md_error_container">#FD795A</color>
+    <color name="md_on_error_container">#6E1400</color>
+    <color name="md_background">#FFF8F5</color>
+    <color name="md_on_background">#3C3026</color>
+    <color name="md_surface">#FFF8F5</color>
+    <color name="md_on_surface">#3C3026</color>
+    <color name="md_surface_variant">#F4DFD0</color>
+    <color name="md_on_surface_variant">#6B5C51</color>
+    <color name="md_outline">#88786C</color>
+    <color name="md_outline_variant">#C1AEA1</color>
+    <color name="md_inverse_surface">#130D09</color>
+    <color name="md_inverse_on_surface">#A69B93</color>
+    <color name="md_inverse_primary">#FEBC85</color>
+    <color name="md_surface_dim">#EBD6C8</color>
+    <color name="md_surface_bright">#FFF8F5</color>
+    <color name="md_surface_container_lowest">#FFFFFF</color>
+    <color name="md_surface_container_low">#FFF1E9</color>
+    <color name="md_surface_container">#FDEBDF</color>
+    <color name="md_surface_container_high">#F8E5D8</color>
+    <color name="md_surface_container_highest">#F4DFD0</color>
+    <color name="md_scrim">#000000</color>
+    <color name="md_shadow">#000000</color>
     <color name="control_button_color">#4CC4C4C4</color>
     <color name="control_button_pressed_color">#4D000000</color>
-
-    <color name="minebutton_color">#91dffb</color>
-    <color name="background_app">#181818</color>
-    <color name="divider">@color/background_overlay</color>
-    <color name="background_overlay">#464646</color>
-    <color name="background_status_bar">#242424</color>
-    <color name="background_bottom_bar">#232323</color>
-    <color name="icon_outline_color">#FFFFFF</color>
-
-    <color name="primary_text">#FFFFFF</color>
-    <color name="secondary_text">#B2B2B2</color>
 </resources>

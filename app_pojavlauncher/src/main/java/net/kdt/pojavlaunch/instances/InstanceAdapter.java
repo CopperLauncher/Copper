@@ -1,5 +1,6 @@
 package net.kdt.pojavlaunch.instances;
 
+import net.kdt.pojavlaunch.utils.ThemeColors;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
@@ -94,7 +95,7 @@ public class InstanceAdapter extends BaseAdapter {
 
         // Set selected background if needed
         if(idx == mSelectionIndex && displaySelection) {
-            extendedTextView.setBackgroundColor(ColorUtils.setAlphaComponent(Color.WHITE, 60));
+            extendedTextView.setBackgroundColor(ThemeColors.get(extendedTextView, com.google.android.material.R.attr.colorSecondaryContainer));
         }else {
             extendedTextView.setBackgroundColor(Color.TRANSPARENT);
         }

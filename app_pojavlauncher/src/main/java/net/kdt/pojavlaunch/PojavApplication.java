@@ -19,6 +19,7 @@ import net.kdt.pojavlaunch.tasks.AsyncAssetManager;
 import net.kdt.pojavlaunch.tasks.MoJsonDownloader;
 import net.kdt.pojavlaunch.utils.FileUtils;
 import net.kdt.pojavlaunch.utils.LocaleUtils;
+import net.kdt.pojavlaunch.utils.ThemeManager;
 
 import java.io.File;
 import java.io.PrintStream;
@@ -77,6 +78,7 @@ public class PojavApplication extends Application {
 		
 		try {
 			super.onCreate();
+			ThemeManager.init(this);
 			if(Tools.checkStorageRoot(this)){
 				// Implicitly initializes early constants and storage constants.
 				// Required to run the main activity properly.

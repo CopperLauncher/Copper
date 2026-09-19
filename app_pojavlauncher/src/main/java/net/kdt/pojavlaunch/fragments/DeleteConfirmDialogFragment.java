@@ -1,5 +1,6 @@
 package net.kdt.pojavlaunch.fragments;
 
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import android.app.Dialog;
 import android.os.Bundle;
 
@@ -23,7 +24,7 @@ public class DeleteConfirmDialogFragment extends DialogFragment {
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         if (mInstance == null) dismiss();
-        return new AlertDialog.Builder(requireContext())
+        return new MaterialAlertDialogBuilder(requireContext())
                 .setTitle(R.string.instance_delete)
                 .setMessage(R.string.instance_delete_confirmation)
                 .setPositiveButton(R.string.global_delete, (dialog, which) -> {

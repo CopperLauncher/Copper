@@ -1,5 +1,7 @@
 package net.kdt.pojavlaunch.fragments;
 
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import net.kdt.pojavlaunch.utils.ThemeColors;
 import static net.kdt.pojavlaunch.Tools.runOnUiThread;
 
 import android.content.ContentResolver;
@@ -190,7 +192,7 @@ public class SearchModFragment extends Fragment implements ModItemAdapter.Search
         mStatusTextView.setVisibility(View.VISIBLE);
         switch (error) {
             case ERROR_INTERNAL:
-                mStatusTextView.setTextColor(Color.RED);
+                mStatusTextView.setTextColor(ThemeColors.error(mStatusTextView.getContext()));
                 mStatusTextView.setText(R.string.search_modpack_error);
                 break;
             case ERROR_NO_RESULTS:
@@ -207,7 +209,7 @@ public class SearchModFragment extends Fragment implements ModItemAdapter.Search
     }
 
     private void displayFilterDialog() {
-        AlertDialog dialog = new AlertDialog.Builder(requireContext())
+        AlertDialog dialog = new MaterialAlertDialogBuilder(requireContext())
                 .setView(R.layout.dialog_mod_filters)
                 .create();
 

@@ -1,5 +1,7 @@
 package com.kdt.mcgui;
 
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import net.kdt.pojavlaunch.utils.ThemeColors;
 import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.content.Context;
@@ -64,7 +66,7 @@ public class AccountSpinner extends AppCompatSpinner implements LoginListener, A
 
         @Override
         public boolean onValueSet(String key, @NonNull String value) {
-            mLoginBarPaint.setColor(getResources().getColor(R.color.minebutton_color));
+            mLoginBarPaint.setColor(ThemeColors.primary(getContext()));
             BackgroundLogin backgroundLogin = mAuthType.createAuth();
             backgroundLogin.createAccount(AccountSpinner.this, value);
             return false;
@@ -128,8 +130,8 @@ public class AccountSpinner extends AppCompatSpinner implements LoginListener, A
         setOnItemSelectedListener(this);
         reload();
 
-        setBackgroundColor(getResources().getColor(R.color.background_status_bar));
-        mLoginBarPaint.setColor(getResources().getColor(R.color.minebutton_color));
+        setBackgroundColor(ThemeColors.surfaceContainer(getContext()));
+        mLoginBarPaint.setColor(ThemeColors.primary(getContext()));
         mLoginBarPaint.setStrokeWidth(getResources().getDimensionPixelOffset(R.dimen._2sdp));
         mLoginStepAnimator.addUpdateListener(this);
         mLoginStep = mMaxSteps;
@@ -212,7 +214,7 @@ public class AccountSpinner extends AppCompatSpinner implements LoginListener, A
 
     @Override
     public void onLoginError(Throwable errorMessage) {
-        mLoginBarPaint.setColor(Color.RED);
+        mLoginBarPaint.setColor(ThemeColors.error(getContext()));
         invalidate();
 
         Context context = getContext();
@@ -351,7 +353,7 @@ public class AccountSpinner extends AppCompatSpinner implements LoginListener, A
         }
 
         private void showDeleteDialog(Context context, int position) {
-            new AlertDialog.Builder(context)
+            new MaterialAlertDialogBuilder(context)
                     .setMessage(R.string.warning_remove_account)
                     .setPositiveButton(android.R.string.cancel, null)
                     .setNeutralButton(R.string.global_delete, (dialog, which) -> {

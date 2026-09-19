@@ -1,5 +1,6 @@
 package net.kdt.pojavlaunch.profiles;
 
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import static net.kdt.pojavlaunch.extra.ExtraCore.getValue;
 
 import android.content.Context;
@@ -14,7 +15,7 @@ import net.kdt.pojavlaunch.extra.ExtraConstants;
 
 public class VersionSelectorDialog {
     public static void open(Context context, boolean hideCustomVersions, VersionSelectorListener listener) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        AlertDialog.Builder builder = new MaterialAlertDialogBuilder(context);
         ExpandableListView expandableListView = (ExpandableListView) LayoutInflater.from(context)
                 .inflate(R.layout.dialog_expendable_list_view , null);
         JVersionList jVersionList = (JVersionList) getValue(ExtraConstants.RELEASE_TABLE);

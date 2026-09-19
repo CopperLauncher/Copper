@@ -520,4 +520,9 @@
     <string name="preference_button_transparency">Buttons transparency</string>
     <string name="preference_button_transparency_summary">Changes on-screen buttons transparency</string>
     <string name="main_please_restart">Please restart the game from the launcher homescreen</string>
+    <string name="preference_category_appearance">Appearance</string>
+    <string name="preference_theme_mode_title">Theme</string>
+    <string name="preference_theme_mode_description">Choose between the light theme, the dark theme, or following the system setting</string>
+    <string name="preference_dynamic_color_title">Dynamic color</string>
+    <string name="preference_dynamic_color_description">Use colors from your wallpaper (Material You). Requires Android 12 or newer</string>
 </resources>

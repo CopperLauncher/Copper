@@ -1,6 +1,7 @@
 package com.kdt.mcgui;
 
 
+import net.kdt.pojavlaunch.utils.ThemeColors;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -83,7 +84,7 @@ public class ProgressLayout extends ConstraintLayout implements View.OnClickList
         mLinearLayout = findViewById(R.id.progress_linear_layout);
         mTaskNumberDisplayer = findViewById(R.id.progress_textview);
         mFlipArrow = findViewById(R.id.progress_flip_arrow);
-        setBackgroundColor(getResources().getColor(R.color.background_bottom_bar));
+        setBackgroundColor(ThemeColors.surfaceContainerHigh(getContext()));
         setOnClickListener(this);
     }
 

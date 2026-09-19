@@ -1,5 +1,6 @@
 package net.kdt.pojavlaunch.utils;
 
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -55,7 +56,7 @@ public class CropperUtils {
     private static void openCropperDialog(Context context, Uri selectedUri,
                                           final CropperReceiver cropperReceiver) {
         ContentResolver contentResolver = context.getContentResolver();
-        AlertDialog dialog = new AlertDialog.Builder(context)
+        AlertDialog dialog = new MaterialAlertDialogBuilder(context)
                 .setTitle(R.string.cropper_title)
                 .setView(R.layout.dialog_cropper)
                 .setPositiveButton(android.R.string.ok, null)

@@ -1,5 +1,6 @@
 package com.kdt.mcgui;
 
+import net.kdt.pojavlaunch.utils.ThemeColors;
 import android.content.Context;
 import android.graphics.BlendMode;
 import android.graphics.Canvas;
@@ -37,7 +38,7 @@ public class TextProgressBar extends ProgressBar {
         setProgressDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.view_text_progressbar, null));
         setProgress(35);
         mTextPaint = new Paint();
-        mTextPaint.setColor(Color.WHITE);
+        mTextPaint.setColor(ThemeColors.get(getContext(), com.google.android.material.R.attr.colorOnPrimaryContainer));
         mTextPaint.setFlags(Paint.FAKE_BOLD_TEXT_FLAG);
         mTextPaint.setAntiAlias(true);
     }

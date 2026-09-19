@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Static Material 3 fallback palette (seed #B87333), used when dynamic color is unavailable or disabled. -->
+<resources>
+    <color name="md_primary">#F2BC90</color>
+    <color name="md_on_primary">#5C3817</color>
+    <color name="md_primary_container">#714A27</color>
+    <color name="md_on_primary_container">#FFDDC4</color>
+    <color name="md_secondary">#E3C0A6</color>
+    <color name="md_on_secondary">#533B28</color>
+    <color name="md_secondary_container">#4E3723</color>
+    <color name="md_on_secondary_container">#DBB99F</color>
+    <color name="md_tertiary">#FFFADF</color>
+    <color name="md_on_tertiary">#65612A</color>
+    <color name="md_tertiary_container">#F4EEA8</color>
+    <color name="md_on_tertiary_container">#5C5822</color>
+    <color name="md_error">#F97758</color>
+    <color name="md_on_error">#450900</color>
+    <color name="md_error_container">#85230A</color>
+    <color name="md_on_error_container">#FF9B82</color>
+    <color name="md_background">#130D09</color>
+    <color name="md_on_background">#F7E2D3</color>
+    <color name="md_surface">#130D09</color>
+    <color name="md_on_surface">#F7E2D3</color>
+    <color name="md_surface_variant">#2F231B</color>
+    <color name="md_on_surface_variant">#BAA89B</color>
+    <color name="md_outline">#837267</color>
+    <color name="md_outline_variant">#53453B</color>
+    <color name="md_inverse_surface">#FFF8F5</color>
+    <color name="md_inverse_on_surface">#5C534D</color>
+    <color name="md_inverse_primary">#7F5632</color>
+    <color name="md_surface_dim">#130D09</color>
+    <color name="md_surface_bright">#362A20</color>
+    <color name="md_surface_container_lowest">#000000</color>
+    <color name="md_surface_container_low">#19120C</color>
+    <color name="md_surface_container">#211811</color>
+    <color name="md_surface_container_high">#271E16</color>
+    <color name="md_surface_container_highest">#2F231B</color>
+    <color name="md_scrim">#000000</color>
+    <color name="md_shadow">#000000</color>
+</resources>
