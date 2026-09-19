@@ -45,7 +45,7 @@ public class ThemeColorPreference extends Preference {
     }
 
     private void init() {
-        setWidgetLayout(R.layout.preference_color_widget);
+        setWidgetLayoutResource(R.layout.preference_color_widget);
     }
 
     private int getColor() {
