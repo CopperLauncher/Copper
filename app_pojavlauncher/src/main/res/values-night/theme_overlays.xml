@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Generated: Material 3 tonal-spot palettes for hues 0..350 in 10 degree steps (dark). -->
 <resources>
-    <style name="ThemeOverlay.Copper.Hue0">
+    <style name="ThemeOverlay.Copper.Hue0" parent="">
         <item name="colorPrimary">#F3B6C7</item>
         <item name="colorOnPrimary">#5E3341</item>
         <item name="colorPrimaryContainer">#734553</item>
@@ -37,7 +37,7 @@
         <item name="colorSurfaceContainerHigh">#271D20</item>
         <item name="colorSurfaceContainerHighest">#2F2226</item>
     </style>
-    <style name="ThemeOverlay.Copper.Hue10">
+    <style name="ThemeOverlay.Copper.Hue10" parent="">
         <item name="colorPrimary">#F6B6BE</item>
         <item name="colorOnPrimary">#60333A</item>
         <item name="colorPrimaryContainer">#75454C</item>
@@ -73,7 +73,7 @@
         <item name="colorSurfaceContainerHigh">#281D1E</item>
         <item name="colorSurfaceContainerHighest">#302224</item>
     </style>
-    <style name="ThemeOverlay.Copper.Hue20">
+    <style name="ThemeOverlay.Copper.Hue20" parent="">
         <item name="colorPrimary">#F8B6B3</item>
         <item name="colorOnPrimary">#613332</item>
         <item name="colorPrimaryContainer">#764544</item>
@@ -109,7 +109,7 @@
         <item name="colorSurfaceContainerHigh">#281D1C</item>
         <item name="colorSurfaceContainerHighest">#302222</item>
     </style>
-    <style name="ThemeOverlay.Copper.Hue30">
+    <style name="ThemeOverlay.Copper.Hue30" parent="">
         <item name="colorPrimary">#F9B7A9</item>
         <item name="colorOnPrimary">#61342A</item>
         <item name="colorPrimaryContainer">#76453B</item>
@@ -145,7 +145,7 @@
         <item name="colorSurfaceContainerHigh">#291D1A</item>
         <item name="colorSurfaceContainerHighest">#302220</item>
     </style>
-    <style name="ThemeOverlay.Copper.Hue40">
+    <style name="ThemeOverlay.Copper.Hue40" parent="">
         <item name="colorPrimary">#F8B89E</item>
         <item name="colorOnPrimary">#603523</item>
         <item name="colorPrimaryContainer">#754733</item>
@@ -181,7 +181,7 @@
         <item name="colorSurfaceContainerHigh">#281D19</item>
         <item name="colorSurfaceContainerHighest">#30231E</item>
     </style>
-    <style name="ThemeOverlay.Copper.Hue50">
+    <style name="ThemeOverlay.Copper.Hue50" parent="">
         <item name="colorPrimary">#F6BA96</item>
         <item name="colorOnPrimary">#5E361C</item>
         <item name="colorPrimaryContainer">#74482C</item>
@@ -217,7 +217,7 @@
         <item name="colorSurfaceContainerHigh">#281D17</item>
         <item name="colorSurfaceContainerHighest">#30231C</item>
     </style>
-    <style name="ThemeOverlay.Copper.Hue60">
+    <style name="ThemeOverlay.Copper.Hue60" parent="">
         <item name="colorPrimary">#F2BC8F</item>
         <item name="colorOnPrimary">#5C3816</item>
         <item name="colorPrimaryContainer">#714A26</item>
@@ -253,7 +253,7 @@
         <item name="colorSurfaceContainerHigh">#271E16</item>
         <item name="colorSurfaceContainerHighest">#2F241A</item>
     </style>
-    <style name="ThemeOverlay.Copper.Hue70">
+    <style name="ThemeOverlay.Copper.Hue70" parent="">
         <item name="colorPrimary">#ECBF8A</item>
         <item name="colorOnPrimary">#583A11</item>
         <item name="colorPrimaryContainer">#6C4C22</item>
@@ -289,7 +289,7 @@
         <item name="colorSurfaceContainerHigh">#261E15</item>
         <item name="colorSurfaceContainerHighest">#2E2419</item>
     </style>
-    <style name="ThemeOverlay.Copper.Hue80">
+    <style name="ThemeOverlay.Copper.Hue80" parent="">
         <item name="colorPrimary">#E5C187</item>
         <item name="colorOnPrimary">#543C0E</item>
         <item name="colorPrimaryContainer">#684E1F</item>
@@ -325,7 +325,7 @@
         <item name="colorSurfaceContainerHigh">#251F15</item>
         <item name="colorSurfaceContainerHighest">#2C2519</item>
     </style>
-    <style name="ThemeOverlay.Copper.Hue90">
+    <style name="ThemeOverlay.Copper.Hue90" parent="">
         <item name="colorPrimary">#DDC487</item>
         <item name="colorOnPrimary">#4F3E0E</item>
         <item name="colorPrimaryContainer">#62501F</item>
@@ -361,7 +361,7 @@
         <item name="colorSurfaceContainerHigh">#241F15</item>
         <item name="colorSurfaceContainerHighest">#2B2519</item>
     </style>
-    <style name="ThemeOverlay.Copper.Hue100">
+    <style name="ThemeOverlay.Copper.Hue100" parent="">
         <item name="colorPrimary">#D5C789</item>
         <item name="colorOnPrimary">#49400F</item>
         <item name="colorPrimaryContainer">#5D5220</item>
@@ -397,7 +397,7 @@
         <item name="colorSurfaceContainerHigh">#222015</item>
         <item name="colorSurfaceContainerHighest">#292619</item>
     </style>
-    <style name="ThemeOverlay.Copper.Hue110">
+    <style name="ThemeOverlay.Copper.Hue110" parent="">
         <item name="colorPrimary">#CCC98D</item>
         <item name="colorOnPrimary">#434214</item>
         <item name="colorPrimaryContainer">#555524</item>
@@ -433,7 +433,7 @@
         <item name="colorSurfaceContainerHigh">#212016</item>
         <item name="colorSurfaceContainerHighest">#27261A</item>
     </style>
-    <style name="ThemeOverlay.Copper.Hue120">
+    <style name="ThemeOverlay.Copper.Hue120" parent="">
         <item name="colorPrimary">#C2CC93</item>
         <item name="colorOnPrimary">#3C4419</item>
         <item name="colorPrimaryContainer">#4E5629</item>
@@ -469,7 +469,7 @@
         <item name="colorSurfaceContainerHigh">#1F2017</item>
         <item name="colorSurfaceContainerHighest">#25271B</item>
     </style>
-    <style name="ThemeOverlay.Copper.Hue130">
+    <style name="ThemeOverlay.Copper.Hue130" parent="">
         <item name="colorPrimary">#BACD9A</item>
         <item name="colorOnPrimary">#36451E</item>
         <item name="colorPrimaryContainer">#47582F</item>
@@ -505,7 +505,7 @@
         <item name="colorSurfaceContainerHigh">#1E2118</item>
         <item name="colorSurfaceContainerHighest">#23271D</item>
     </style>
-    <style name="ThemeOverlay.Copper.Hue140">
+    <style name="ThemeOverlay.Copper.Hue140" parent="">
         <item name="colorPrimary">#B2CFA2</item>
         <item name="colorOnPrimary">#2E4625</item>
         <item name="colorPrimaryContainer">#405936</item>
@@ -541,7 +541,7 @@
         <item name="colorSurfaceContainerHigh">#1C2119</item>
         <item name="colorSurfaceContainerHighest">#22271E</item>
     </style>
-    <style name="ThemeOverlay.Copper.Hue150">
+    <style name="ThemeOverlay.Copper.Hue150" parent="">
         <item name="colorPrimary">#ABD0AB</item>
         <item name="colorOnPrimary">#27472B</item>
         <item name="colorPrimaryContainer">#395A3C</item>
@@ -577,7 +577,7 @@
         <item name="colorSurfaceContainerHigh">#1B211B</item>
         <item name="colorSurfaceContainerHighest">#202820</item>
     </style>
-    <style name="ThemeOverlay.Copper.Hue160">
+    <style name="ThemeOverlay.Copper.Hue160" parent="">
         <item name="colorPrimary">#A5D1B3</item>
         <item name="colorOnPrimary">#204832</item>
         <item name="colorPrimaryContainer">#335B43</item>
@@ -613,7 +613,7 @@
         <item name="colorSurfaceContainerHigh">#1A211C</item>
         <item name="colorSurfaceContainerHighest">#1F2822</item>
     </style>
-    <style name="ThemeOverlay.Copper.Hue170">
+    <style name="ThemeOverlay.Copper.Hue170" parent="">
         <item name="colorPrimary">#A1D1BA</item>
         <item name="colorOnPrimary">#1A4837</item>
         <item name="colorPrimaryContainer">#2E5B49</item>
@@ -649,7 +649,7 @@
         <item name="colorSurfaceContainerHigh">#19211D</item>
         <item name="colorSurfaceContainerHighest">#1E2823</item>
     </style>
-    <style name="ThemeOverlay.Copper.Hue180">
+    <style name="ThemeOverlay.Copper.Hue180" parent="">
         <item name="colorPrimary">#9DD1C3</item>
         <item name="colorOnPrimary">#13483E</item>
         <item name="colorPrimaryContainer">#295B50</item>
@@ -685,7 +685,7 @@
         <item name="colorSurfaceContainerHigh">#19211F</item>
         <item name="colorSurfaceContainerHighest">#1E2825</item>
     </style>
-    <style name="ThemeOverlay.Copper.Hue190">
+    <style name="ThemeOverlay.Copper.Hue190" parent="">
         <item name="colorPrimary">#9CD1CB</item>
         <item name="colorOnPrimary">#0E4844</item>
         <item name="colorPrimaryContainer">#265B56</item>
@@ -721,7 +721,7 @@
         <item name="colorSurfaceContainerHigh">#192120</item>
         <item name="colorSurfaceContainerHighest">#1D2826</item>
     </style>
-    <style name="ThemeOverlay.Copper.Hue200">
+    <style name="ThemeOverlay.Copper.Hue200" parent="">
         <item name="colorPrimary">#9BD0D2</item>
         <item name="colorOnPrimary">#0C4849</item>
         <item name="colorPrimaryContainer">#255A5C</item>
@@ -757,7 +757,7 @@
         <item name="colorSurfaceContainerHigh">#192121</item>
         <item name="colorSurfaceContainerHighest">#1D2828</item>
     </style>
-    <style name="ThemeOverlay.Copper.Hue210">
+    <style name="ThemeOverlay.Copper.Hue210" parent="">
         <item name="colorPrimary">#9DCFD8</item>
         <item name="colorOnPrimary">#0E474F</item>
         <item name="colorPrimaryContainer">#265962</item>
@@ -793,7 +793,7 @@
         <item name="colorSurfaceContainerHigh">#192122</item>
         <item name="colorSurfaceContainerHighest">#1E2729</item>
     </style>
-    <style name="ThemeOverlay.Copper.Hue220">
+    <style name="ThemeOverlay.Copper.Hue220" parent="">
         <item name="colorPrimary">#9FCEDE</item>
         <item name="colorOnPrimary">#124653</item>
         <item name="colorPrimaryContainer">#295866</item>
@@ -829,7 +829,7 @@
         <item name="colorSurfaceContainerHigh">#192123</item>
         <item name="colorSurfaceContainerHighest">#1E272A</item>
     </style>
-    <style name="ThemeOverlay.Copper.Hue230">
+    <style name="ThemeOverlay.Copper.Hue230" parent="">
         <item name="colorPrimary">#A2CDE3</item>
         <item name="colorOnPrimary">#184557</item>
         <item name="colorPrimaryContainer">#2D576A</item>
@@ -865,7 +865,7 @@
         <item name="colorSurfaceContainerHigh">#1A2124</item>
         <item name="colorSurfaceContainerHighest">#1F272B</item>
     </style>
-    <style name="ThemeOverlay.Copper.Hue240">
+    <style name="ThemeOverlay.Copper.Hue240" parent="">
         <item name="colorPrimary">#A7CBE7</item>
         <item name="colorOnPrimary">#1E445B</item>
         <item name="colorPrimaryContainer">#32566E</item>
@@ -901,7 +901,7 @@
         <item name="colorSurfaceContainerHigh">#1A2025</item>
         <item name="colorSurfaceContainerHighest">#20272C</item>
     </style>
-    <style name="ThemeOverlay.Copper.Hue250">
+    <style name="ThemeOverlay.Copper.Hue250" parent="">
         <item name="colorPrimary">#ACC9EA</item>
         <item name="colorOnPrimary">#25425D</item>
         <item name="colorPrimaryContainer">#385571</item>
@@ -937,7 +937,7 @@
         <item name="colorSurfaceContainerHigh">#1B2026</item>
         <item name="colorSurfaceContainerHighest">#21262D</item>
     </style>
-    <style name="ThemeOverlay.Copper.Hue260">
+    <style name="ThemeOverlay.Copper.Hue260" parent="">
         <item name="colorPrimary">#B3C7ED</item>
         <item name="colorOnPrimary">#2C415F</item>
         <item name="colorPrimaryContainer">#3F5373</item>
@@ -973,7 +973,7 @@
         <item name="colorSurfaceContainerHigh">#1C2026</item>
         <item name="colorSurfaceContainerHighest">#22262D</item>
     </style>
-    <style name="ThemeOverlay.Copper.Hue270">
+    <style name="ThemeOverlay.Copper.Hue270" parent="">
         <item name="colorPrimary">#B9C6EE</item>
         <item name="colorOnPrimary">#333F61</item>
         <item name="colorPrimaryContainer">#455274</item>
@@ -1009,7 +1009,7 @@
         <item name="colorSurfaceContainerHigh">#1D1F26</item>
         <item name="colorSurfaceContainerHighest">#23262E</item>
     </style>
-    <style name="ThemeOverlay.Copper.Hue280">
+    <style name="ThemeOverlay.Copper.Hue280" parent="">
         <item name="colorPrimary">#C0C4EE</item>
         <item name="colorOnPrimary">#393E61</item>
         <item name="colorPrimaryContainer">#4C5074</item>
@@ -1045,7 +1045,7 @@
         <item name="colorSurfaceContainerHigh">#1F1F26</item>
         <item name="colorSurfaceContainerHighest">#25252E</item>
     </style>
-    <style name="ThemeOverlay.Copper.Hue290">
+    <style name="ThemeOverlay.Copper.Hue290" parent="">
         <item name="colorPrimary">#C6C2EE</item>
         <item name="colorOnPrimary">#3F3C60</item>
         <item name="colorPrimaryContainer">#514E74</item>
@@ -1081,7 +1081,7 @@
         <item name="colorSurfaceContainerHigh">#201F26</item>
         <item name="colorSurfaceContainerHighest">#26252E</item>
     </style>
-    <style name="ThemeOverlay.Copper.Hue300">
+    <style name="ThemeOverlay.Copper.Hue300" parent="">
         <item name="colorPrimary">#CEC0EC</item>
         <item name="colorOnPrimary">#453A5F</item>
         <item name="colorPrimaryContainer">#584C72</item>
@@ -1117,7 +1117,7 @@
         <item name="colorSurfaceContainerHigh">#211E26</item>
         <item name="colorSurfaceContainerHighest">#27242D</item>
     </style>
-    <style name="ThemeOverlay.Copper.Hue310">
+    <style name="ThemeOverlay.Copper.Hue310" parent="">
         <item name="colorPrimary">#D5BEE9</item>
         <item name="colorOnPrimary">#4A395C</item>
         <item name="colorPrimaryContainer">#5D4B6F</item>
@@ -1153,7 +1153,7 @@
         <item name="colorSurfaceContainerHigh">#221E25</item>
         <item name="colorSurfaceContainerHighest">#29242D</item>
     </style>
-    <style name="ThemeOverlay.Copper.Hue320">
+    <style name="ThemeOverlay.Copper.Hue320" parent="">
         <item name="colorPrimary">#DCBCE5</item>
         <item name="colorOnPrimary">#4F3758</item>
         <item name="colorPrimaryContainer">#63496C</item>
@@ -1189,7 +1189,7 @@
         <item name="colorSurfaceContainerHigh">#231E25</item>
         <item name="colorSurfaceContainerHighest">#2A242C</item>
     </style>
-    <style name="ThemeOverlay.Copper.Hue330">
+    <style name="ThemeOverlay.Copper.Hue330" parent="">
         <item name="colorPrimary">#E3BADF</item>
         <item name="colorOnPrimary">#543654</item>
         <item name="colorPrimaryContainer">#684867</item>
@@ -1225,7 +1225,7 @@
         <item name="colorSurfaceContainerHigh">#251D24</item>
         <item name="colorSurfaceContainerHighest">#2C232B</item>
     </style>
-    <style name="ThemeOverlay.Copper.Hue340">
+    <style name="ThemeOverlay.Copper.Hue340" parent="">
         <item name="colorPrimary">#E9B8D8</item>
         <item name="colorOnPrimary">#58354E</item>
         <item name="colorPrimaryContainer">#6C4661</item>
@@ -1261,7 +1261,7 @@
         <item name="colorSurfaceContainerHigh">#261D23</item>
         <item name="colorSurfaceContainerHighest">#2D2329</item>
     </style>
-    <style name="ThemeOverlay.Copper.Hue350">
+    <style name="ThemeOverlay.Copper.Hue350" parent="">
         <item name="colorPrimary">#EEB7D0</item>
         <item name="colorOnPrimary">#5B3448</item>
         <item name="colorPrimaryContainer">#70465B</item>
