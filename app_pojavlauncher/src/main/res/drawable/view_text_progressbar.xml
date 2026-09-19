@@ -1,13 +1,13 @@
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android" >
 
     <item android:id="@android:id/background">
-        <color android:color="?attr/colorSurface"/>
+        <color android:color="?attr/colorSurfaceContainerHighest"/>
     </item>
 
 
     <item android:id="@android:id/progress">
         <clip>
-             <color android:color='?attr/colorPrimary'/>
+             <color android:color='?attr/colorPrimaryContainer'/>
         </clip>
     </item>
 

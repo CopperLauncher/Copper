@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<View xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/theme_color_swatch"
+    android:layout_width="28dp"
+    android:layout_height="28dp"
+    android:background="@drawable/bg_color_swatch" />

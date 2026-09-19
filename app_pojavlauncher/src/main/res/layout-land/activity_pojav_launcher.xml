@@ -11,6 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/_42sdp"
 
+        android:popupBackground="@drawable/bg_popup_rounded"
         android:dropDownWidth="wrap_content"
         android:dropDownVerticalOffset="@dimen/_42sdp"
 

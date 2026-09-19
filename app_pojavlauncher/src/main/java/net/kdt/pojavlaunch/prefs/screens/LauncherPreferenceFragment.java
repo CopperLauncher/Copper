@@ -24,6 +24,7 @@ import net.kdt.pojavlaunch.utils.ThemeManager;
  */
 public class LauncherPreferenceFragment extends PreferenceFragmentCompat implements SharedPreferences.OnSharedPreferenceChangeListener {
     protected Runnable mVisibilityUpdater = () -> {};
+    private boolean mRecreatePending;
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
@@ -76,9 +77,13 @@ public class LauncherPreferenceFragment extends PreferenceFragmentCompat impleme
         LauncherPreferences.loadPreferences(getContext());
         if(ThemeManager.PREF_THEME_MODE.equals(s)) {
             ThemeManager.applyThemeMode(p.getString(s, "system"));
-        }else if(ThemeManager.PREF_DYNAMIC_COLOR.equals(s)) {
+        }else if(ThemeManager.PREF_COLOR_SOURCE.equals(s) || ThemeManager.PREF_CUSTOM_COLOR.equals(s)) {
             Activity activity = getActivity();
-            if(activity != null) activity.recreate();
+            // Both keys can change together, only recreate once
+            if(activity != null && !mRecreatePending) {
+                mRecreatePending = true;
+                activity.getWindow().getDecorView().post(activity::recreate);
+            }
         }
     }
 

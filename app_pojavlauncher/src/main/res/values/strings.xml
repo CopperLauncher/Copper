@@ -523,6 +523,9 @@
     <string name="preference_category_appearance">Appearance</string>
     <string name="preference_theme_mode_title">Theme</string>
     <string name="preference_theme_mode_description">Choose between the light theme, the dark theme, or following the system setting</string>
-    <string name="preference_dynamic_color_title">Dynamic color</string>
-    <string name="preference_dynamic_color_description">Use colors from your wallpaper (Material You). Requires Android 12 or newer</string>
+    <string name="preference_color_source_title">Color source</string>
+    <string name="preference_theme_color_title">Custom color</string>
+    <string name="preference_theme_color_dialog_hint">Pick any color. The launcher theme is generated from it.</string>
+    <string name="preference_theme_color_hex">Hex color</string>
+    <string name="preference_theme_color_reset">Reset</string>
 </resources>

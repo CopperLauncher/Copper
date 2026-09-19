@@ -5,10 +5,10 @@
         <shape
             android:shape="rectangle" >
 
-            <corners android:radius="@dimen/_2sdp" />
+            <corners android:radius="12dp" />
 
             <stroke
-                android:width="@dimen/_2sdp"
+                android:width="12dp"
                 android:color="?attr/colorPrimary"/>
         </shape>
     </item>

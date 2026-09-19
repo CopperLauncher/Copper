@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <array name="theme_hue_overlays">
+        <item>@style/ThemeOverlay.Copper.Hue0</item>
+        <item>@style/ThemeOverlay.Copper.Hue10</item>
+        <item>@style/ThemeOverlay.Copper.Hue20</item>
+        <item>@style/ThemeOverlay.Copper.Hue30</item>
+        <item>@style/ThemeOverlay.Copper.Hue40</item>
+        <item>@style/ThemeOverlay.Copper.Hue50</item>
+        <item>@style/ThemeOverlay.Copper.Hue60</item>
+        <item>@style/ThemeOverlay.Copper.Hue70</item>
+        <item>@style/ThemeOverlay.Copper.Hue80</item>
+        <item>@style/ThemeOverlay.Copper.Hue90</item>
+        <item>@style/ThemeOverlay.Copper.Hue100</item>
+        <item>@style/ThemeOverlay.Copper.Hue110</item>
+        <item>@style/ThemeOverlay.Copper.Hue120</item>
+        <item>@style/ThemeOverlay.Copper.Hue130</item>
+        <item>@style/ThemeOverlay.Copper.Hue140</item>
+        <item>@style/ThemeOverlay.Copper.Hue150</item>
+        <item>@style/ThemeOverlay.Copper.Hue160</item>
+        <item>@style/ThemeOverlay.Copper.Hue170</item>
+        <item>@style/ThemeOverlay.Copper.Hue180</item>
+        <item>@style/ThemeOverlay.Copper.Hue190</item>
+        <item>@style/ThemeOverlay.Copper.Hue200</item>
+        <item>@style/ThemeOverlay.Copper.Hue210</item>
+        <item>@style/ThemeOverlay.Copper.Hue220</item>
+        <item>@style/ThemeOverlay.Copper.Hue230</item>
+        <item>@style/ThemeOverlay.Copper.Hue240</item>
+        <item>@style/ThemeOverlay.Copper.Hue250</item>
+        <item>@style/ThemeOverlay.Copper.Hue260</item>
+        <item>@style/ThemeOverlay.Copper.Hue270</item>
+        <item>@style/ThemeOverlay.Copper.Hue280</item>
+        <item>@style/ThemeOverlay.Copper.Hue290</item>
+        <item>@style/ThemeOverlay.Copper.Hue300</item>
+        <item>@style/ThemeOverlay.Copper.Hue310</item>
+        <item>@style/ThemeOverlay.Copper.Hue320</item>
+        <item>@style/ThemeOverlay.Copper.Hue330</item>
+        <item>@style/ThemeOverlay.Copper.Hue340</item>
+        <item>@style/ThemeOverlay.Copper.Hue350</item>
+    </array>
+</resources>
