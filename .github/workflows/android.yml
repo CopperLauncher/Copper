@@ -115,7 +115,7 @@ jobs:
         uses: r0adkll/upload-google-play@v1.1.5
         with:
           serviceAccountJsonPlainText: ${{ secrets.SERVICE_JSON }}
-          packageName: git.artdeell.mjlaunch
+          packageName: com.maxjubayeryt.copper
           releaseFiles: out/app-gplay.aab
           track: internal
           inAppUpdatePriority: 5
