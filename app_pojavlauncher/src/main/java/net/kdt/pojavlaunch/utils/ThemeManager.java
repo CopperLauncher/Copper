@@ -32,6 +32,7 @@ public final class ThemeManager {
     public static final String PREF_THEME_MODE = "theme_mode";
     public static final String PREF_COLOR_SOURCE = "color_source";
     public static final String PREF_CUSTOM_COLOR = "theme_custom_color";
+    public static final String PREF_FORCE_LANDSCAPE = "force_landscape";
 
     public static final String SOURCE_DYNAMIC = "dynamic";
     public static final String SOURCE_DEFAULT = "default";
@@ -79,6 +80,13 @@ public final class ThemeManager {
         }
     }
 
+    /** Locks the activity to landscape when the user asked for it, otherwise leaves it alone */
+    public static void applyForcedOrientation(@NonNull Activity activity) {
+        boolean force = PreferenceManager.getDefaultSharedPreferences(activity)
+                .getBoolean(PREF_FORCE_LANDSCAPE, false);
+        if (force) activity.setRequestedOrientation(android.content.pm.ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
+    }
+
     private static int getOverlayForColor(Activity activity, int color) {
         int count = 360 / HUE_STEP;
         int index = (int) Math.round(getHue(color) / HUE_STEP) % count;
@@ -94,12 +102,16 @@ public final class ThemeManager {
         @Override
         public void onActivityPreCreated(@NonNull Activity activity, @Nullable Bundle savedInstanceState) {
             applyColors(activity);
+            AnimationManager.applyToActivity(activity);
         }
 
         @Override
         public void onActivityCreated(@NonNull Activity activity, @Nullable Bundle savedInstanceState) {
             // Before Android 10 there is no pre-created callback, but this still runs before setContentView.
-            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) applyColors(activity);
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+                applyColors(activity);
+                AnimationManager.applyToActivity(activity);
+            }
         }
 
         @Override public void onActivityStarted(@NonNull Activity activity) {}

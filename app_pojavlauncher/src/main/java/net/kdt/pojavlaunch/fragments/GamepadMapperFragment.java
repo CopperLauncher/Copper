@@ -1,5 +1,6 @@
 package net.kdt.pojavlaunch.fragments;
 
+import net.kdt.pojavlaunch.utils.AnimationManager;
 import android.app.Activity;
 import android.os.Bundle;
 import android.os.Handler;
@@ -62,6 +63,7 @@ public class GamepadMapperFragment extends Fragment implements
         mMapperAdapter = new GamepadMapperAdapter(view.getContext());
         buttonRecyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
         buttonRecyclerView.setAdapter(mMapperAdapter);
+        AnimationManager.applyListAnimation(buttonRecyclerView);
         buttonRecyclerView.setOnKeyListener(this);
         buttonRecyclerView.setOnGenericMotionListener(this);
         buttonRecyclerView.requestFocus();

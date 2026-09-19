@@ -1,5 +1,6 @@
 package com.kdt.pickafile;
 
+import net.kdt.pojavlaunch.utils.AnimationManager;
 import androidx.appcompat.app.*;
 import android.content.*;
 import android.util.*;
@@ -145,6 +146,7 @@ public class FileListView extends LinearLayout
                         }
                     }
                     mainLv.setAdapter(fileAdapter);
+                    AnimationManager.applyListAnimation(mainLv);
                     if(dialogTitleListener != null) dialogTitleListener.onChangeDialogTitle(path.getAbsolutePath());
                 } else {
                     fileSelectedListener.onFileSelected(path, path.getAbsolutePath());

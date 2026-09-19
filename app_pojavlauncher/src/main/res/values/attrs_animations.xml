@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Press animation for buttons, empty unless ThemeOverlay.Copper.Animations.Buttons is applied -->
+    <attr name="copperPressAnimator" format="reference" />
+    <!-- Window animation style used by dialogs, no animation unless ThemeOverlay.Copper.Animations.Dialogs is applied -->
+    <attr name="copperDialogAnimations" format="reference" />
+</resources>

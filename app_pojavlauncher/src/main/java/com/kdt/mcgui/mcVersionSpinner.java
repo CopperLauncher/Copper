@@ -1,5 +1,6 @@
 package com.kdt.mcgui;
 
+import net.kdt.pojavlaunch.utils.AnimationManager;
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 
 import android.annotation.SuppressLint;
@@ -153,6 +154,7 @@ public class mcVersionSpinner extends ExtendedTextView {
     private void getPopupWindow(){
         mListView = (ListView) inflate(getContext(), R.layout.spinner_mc_version, null);
         mListView.setAdapter(mProfileAdapter);
+        AnimationManager.applyListAnimation(mListView);
         mListView.setOnItemClickListener((parent, view, position, id) -> {
             Object item = mProfileAdapter.getItem(position);
             if(item instanceof DisplayInstance) {
@@ -181,7 +183,7 @@ public class mcVersionSpinner extends ExtendedTextView {
 
 
         // Custom animation, nice slide in
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && AnimationManager.isEnabled(getContext(), AnimationManager.TYPE_DIALOGS)){
             mPopupAnimation = new Slide(Gravity.BOTTOM);
             mPopupWindow.setEnterTransition((Transition) mPopupAnimation);
             mPopupWindow.setExitTransition((Transition) mPopupAnimation);

@@ -1,6 +1,8 @@
 package net.kdt.pojavlaunch.prefs.screens;
 
 
+import android.content.pm.ActivityInfo;
+import net.kdt.pojavlaunch.utils.AnimationManager;
 import net.kdt.pojavlaunch.utils.ThemeColors;
 import android.Manifest;
 import android.app.Activity;
@@ -30,6 +32,7 @@ public class LauncherPreferenceFragment extends PreferenceFragmentCompat impleme
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         view.setBackgroundColor(ThemeColors.surface(view.getContext()));
         super.onViewCreated(view, savedInstanceState);
+        AnimationManager.applyListAnimation(getListView());
     }
 
     @Override
@@ -77,14 +80,26 @@ public class LauncherPreferenceFragment extends PreferenceFragmentCompat impleme
         LauncherPreferences.loadPreferences(getContext());
         if(ThemeManager.PREF_THEME_MODE.equals(s)) {
             ThemeManager.applyThemeMode(p.getString(s, "system"));
-        }else if(ThemeManager.PREF_COLOR_SOURCE.equals(s) || ThemeManager.PREF_CUSTOM_COLOR.equals(s)) {
+        }else if(ThemeManager.PREF_COLOR_SOURCE.equals(s) || ThemeManager.PREF_CUSTOM_COLOR.equals(s)
+                || AnimationManager.PREF_TYPES.equals(s)) {
+            scheduleRecreate();
+        }else if(ThemeManager.PREF_FORCE_LANDSCAPE.equals(s)) {
             Activity activity = getActivity();
-            // Both keys can change together, only recreate once
-            if(activity != null && !mRecreatePending) {
-                mRecreatePending = true;
-                activity.getWindow().getDecorView().post(activity::recreate);
+            if(activity == null) return;
+            if(p.getBoolean(s, false)) {
+                activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
+            }else if(activity instanceof LauncherActivity) {
+                activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
             }
         }
+    }
+
+    /** Recreates the activity to apply a new theme, only once even if multiple keys changed together */
+    private void scheduleRecreate() {
+        Activity activity = getActivity();
+        if(activity == null || mRecreatePending) return;
+        mRecreatePending = true;
+        activity.getWindow().getDecorView().post(activity::recreate);
     }
 
     protected Preference requirePreference(CharSequence key) {

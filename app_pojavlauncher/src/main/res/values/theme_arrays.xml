@@ -20,4 +20,24 @@
         <item>default</item>
         <item>custom</item>
     </string-array>
+    <string-array name="animation_type_names">
+        <item>None</item>
+        <item>Screen transitions</item>
+        <item>Dialogs and popups</item>
+        <item>Button press effects</item>
+        <item>Lists and content</item>
+    </string-array>
+    <string-array name="animation_type_values">
+        <item>none</item>
+        <item>screens</item>
+        <item>dialogs</item>
+        <item>buttons</item>
+        <item>content</item>
+    </string-array>
+    <string-array name="animation_type_defaults">
+        <item>screens</item>
+        <item>dialogs</item>
+        <item>buttons</item>
+        <item>content</item>
+    </string-array>
 </resources>

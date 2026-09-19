@@ -73,12 +73,6 @@ public class ThemeColorPreference extends Preference {
 
     private void save(int color) {
         persistInt(color | 0xFF000000);
-        // Picking a color implies wanting to use it
-        if (getSharedPreferences() != null) {
-            getSharedPreferences().edit()
-                    .putString(ThemeManager.PREF_COLOR_SOURCE, ThemeManager.SOURCE_CUSTOM)
-                    .apply();
-        }
         notifyChanged();
     }
 

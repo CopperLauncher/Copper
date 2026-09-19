@@ -1,5 +1,6 @@
 package net.kdt.pojavlaunch.multirt;
 
+import net.kdt.pojavlaunch.utils.AnimationManager;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import android.annotation.SuppressLint;
 import androidx.appcompat.app.AlertDialog;
@@ -34,6 +35,7 @@ public class MultiRTConfigDialog {
         mDialogView.setLayoutManager(new LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false));
         RTRecyclerViewAdapter adapter = new RTRecyclerViewAdapter();
         mDialogView.setAdapter(adapter);
+        AnimationManager.applyListAnimation(mDialogView);
 
         mDialog = new MaterialAlertDialogBuilder(activity)
                 .setTitle(R.string.multirt_config_title)

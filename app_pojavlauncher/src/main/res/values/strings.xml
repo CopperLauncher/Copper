@@ -520,7 +520,15 @@
     <string name="preference_button_transparency">Buttons transparency</string>
     <string name="preference_button_transparency_summary">Changes on-screen buttons transparency</string>
     <string name="main_please_restart">Please restart the game from the launcher homescreen</string>
-    <string name="preference_category_appearance">Appearance</string>
+    <string name="preference_appearance_title">Launcher appearance</string>
+    <string name="preference_appearance_description">Theme, colors, orientation and animations</string>
+    <string name="preference_category_theme">Theme</string>
+    <string name="preference_category_display">Display</string>
+    <string name="preference_category_animations">Animations</string>
+    <string name="preference_force_landscape_title">Force landscape</string>
+    <string name="preference_force_landscape_description">Keep the launcher in landscape orientation</string>
+    <string name="preference_animations_title">Animation types</string>
+    <string name="preference_animations_dialog_title">Show animations for</string>
     <string name="preference_theme_mode_title">Theme</string>
     <string name="preference_theme_mode_description">Choose between the light theme, the dark theme, or following the system setting</string>
     <string name="preference_color_source_title">Color source</string>

@@ -1,5 +1,6 @@
 package net.kdt.pojavlaunch.fragments;
 
+import net.kdt.pojavlaunch.utils.AnimationManager;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import net.kdt.pojavlaunch.utils.ThemeColors;
 import static net.kdt.pojavlaunch.Tools.runOnUiThread;
@@ -142,6 +143,7 @@ public class SearchModFragment extends Fragment implements ModItemAdapter.Search
 
         mRecyclerview.setLayoutManager(new LinearLayoutManager(getContext()));
         mRecyclerview.setAdapter(mModItemAdapter);
+        AnimationManager.applyListAnimation(mRecyclerview);
 
         mRecyclerview.addOnScrollListener(mOverlayPositionListener);
 

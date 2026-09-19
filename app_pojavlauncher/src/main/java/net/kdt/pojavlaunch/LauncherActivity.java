@@ -1,5 +1,6 @@
 package net.kdt.pojavlaunch;
 
+import net.kdt.pojavlaunch.utils.AnimationManager;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import static android.content.res.Configuration.ORIENTATION_PORTRAIT;
 import android.Manifest;
@@ -228,6 +229,7 @@ public class LauncherActivity extends BaseActivity {
     protected void onStart() {
         super.onStart();
         getSupportFragmentManager().registerFragmentLifecycleCallbacks(mFragmentCallbackListener, true);
+        AnimationManager.installFragmentTransitions(this);
     }
 
     @Override

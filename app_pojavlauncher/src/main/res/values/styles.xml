@@ -15,6 +15,7 @@
         <item name="android:background">@drawable/bg_menu_button</item>
         <item name="android:textColor">?attr/colorOnSurface</item>
         <item name="android:textAllCaps">false</item>
+        <item name="android:stateListAnimator">?attr/copperPressAnimator</item>
     </style>
 
     <style name="LauncherMenuButton.Universal" parent="LauncherMenuButton">

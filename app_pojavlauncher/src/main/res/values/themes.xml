@@ -52,6 +52,12 @@
         <!-- Rounded dialogs -->
         <item name="materialAlertDialogTheme">@style/ThemeOverlay.Copper.MaterialAlertDialog</item>
         <item name="alertDialogTheme">@style/ThemeOverlay.Copper.Dialog.Alert</item>
+
+        <!-- Animations, enabled at runtime through overlays, see AnimationManager -->
+        <item name="copperPressAnimator">@null</item>
+        <item name="copperDialogAnimations">@style/Animation.Copper.None</item>
+        <item name="materialButtonStyle">@style/Widget.Copper.Button</item>
+        <item name="imageButtonStyle">@style/Widget.Copper.ImageButton</item>
     </style>
 
     <!-- Theme of the small dialog-styled activities (fatal error, exit, etc.) -->
@@ -93,6 +99,9 @@
 
         <item name="materialAlertDialogTheme">@style/ThemeOverlay.Copper.MaterialAlertDialog</item>
         <item name="alertDialogTheme">@style/ThemeOverlay.Copper.Dialog.Alert</item>
+
+        <item name="copperPressAnimator">@null</item>
+        <item name="copperDialogAnimations">@style/Animation.Copper.None</item>
     </style>
 
     <style name="ShapeAppearance.Copper.Dialog" parent="">
@@ -108,10 +117,12 @@
 
     <style name="ThemeOverlay.Copper.MaterialAlertDialog" parent="ThemeOverlay.Material3.MaterialAlertDialog">
         <item name="alertDialogStyle">@style/MaterialAlertDialog.Copper</item>
+        <item name="android:windowAnimationStyle">?attr/copperDialogAnimations</item>
     </style>
 
     <!-- Dialogs created by libraries with the plain AppCompat AlertDialog.Builder (e.g. list preferences) -->
     <style name="ThemeOverlay.Copper.Dialog.Alert" parent="ThemeOverlay.Material3.Dialog.Alert">
         <item name="android:windowBackground">@drawable/bg_dialog_rounded</item>
+        <item name="android:windowAnimationStyle">?attr/copperDialogAnimations</item>
     </style>
 </resources>

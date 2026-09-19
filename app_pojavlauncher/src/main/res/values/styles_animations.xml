@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Window animation styles -->
+    <style name="Animation.Copper.None" parent="@android:style/Animation">
+        <item name="android:windowEnterAnimation">@anim/copper_none</item>
+        <item name="android:windowExitAnimation">@anim/copper_none</item>
+    </style>
+
+    <style name="Animation.Copper.Dialog" parent="@android:style/Animation.Dialog">
+        <item name="android:windowEnterAnimation">@anim/copper_dialog_enter</item>
+        <item name="android:windowExitAnimation">@anim/copper_dialog_exit</item>
+    </style>
+
+    <style name="Animation.Copper.Activity" parent="@android:style/Animation.Activity">
+        <item name="android:activityOpenEnterAnimation">@anim/copper_activity_open_enter</item>
+        <item name="android:activityOpenExitAnimation">@anim/copper_activity_open_exit</item>
+        <item name="android:activityCloseEnterAnimation">@anim/copper_activity_close_enter</item>
+        <item name="android:activityCloseExitAnimation">@anim/copper_activity_close_exit</item>
+    </style>
+
+    <style name="Animation.Copper.ActivityNone" parent="@android:style/Animation.Activity">
+        <item name="android:activityOpenEnterAnimation">@anim/copper_none</item>
+        <item name="android:activityOpenExitAnimation">@anim/copper_none</item>
+        <item name="android:activityCloseEnterAnimation">@anim/copper_none</item>
+        <item name="android:activityCloseExitAnimation">@anim/copper_none</item>
+    </style>
+
+    <!-- Overlays applied by AnimationManager for the animation types the user enabled -->
+    <style name="ThemeOverlay.Copper.Animations.Dialogs" parent="">
+        <item name="copperDialogAnimations">@style/Animation.Copper.Dialog</item>
+    </style>
+
+    <style name="ThemeOverlay.Copper.Animations.Buttons" parent="">
+        <item name="copperPressAnimator">@animator/copper_press_scale</item>
+    </style>
+
+    <!-- Themed button defaults, the press animator is empty unless the overlay above is applied -->
+    <style name="Widget.Copper.Button" parent="Widget.Material3.Button">
+        <item name="android:stateListAnimator">?attr/copperPressAnimator</item>
+    </style>
+
+    <style name="Widget.Copper.ImageButton" parent="Widget.AppCompat.ImageButton">
+        <item name="android:stateListAnimator">?attr/copperPressAnimator</item>
+    </style>
+</resources>

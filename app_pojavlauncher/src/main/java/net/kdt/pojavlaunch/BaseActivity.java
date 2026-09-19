@@ -21,6 +21,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         LocaleUtils.setLocale(this);
+        ThemeManager.applyForcedOrientation(this);
         Tools.setInsetsMode(this, setFullscreen(), shouldIgnoreNotch());
         Tools.getDisplayMetrics(this);
     }

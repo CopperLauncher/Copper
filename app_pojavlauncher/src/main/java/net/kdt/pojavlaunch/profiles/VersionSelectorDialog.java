@@ -1,5 +1,6 @@
 package net.kdt.pojavlaunch.profiles;
 
+import net.kdt.pojavlaunch.utils.AnimationManager;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import static net.kdt.pojavlaunch.extra.ExtraCore.getValue;
 
@@ -25,6 +26,7 @@ public class VersionSelectorDialog {
         VersionListAdapter adapter = new VersionListAdapter(versionArray, hideCustomVersions, context);
 
         expandableListView.setAdapter(adapter);
+        AnimationManager.applyListAnimation(expandableListView);
         builder.setView(expandableListView);
         AlertDialog dialog = builder.show();
 
