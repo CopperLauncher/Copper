@@ -9,7 +9,7 @@
 
 
             <stroke
-                android:width="12dp"
+                android:width="@dimen/_2sdp"
                 android:color="?attr/colorOutline"/>
         </shape>
     </item>
