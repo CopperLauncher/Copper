@@ -1,5 +1,6 @@
 package net.kdt.pojavlaunch;
 
+import net.kdt.pojavlaunch.fragments.MainMenuFragment;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import net.kdt.pojavlaunch.utils.ThemeColors;
 import static android.os.Build.VERSION.SDK_INT;
@@ -731,11 +732,32 @@ public final class Tools {
         }
     }
 
-    /** Swap the main fragment with another */
+    /** @return the two-pane main menu if it is the current screen of the activity, null otherwise */
+    @Nullable
+    private static MainMenuFragment getTwoPaneMainMenu(FragmentActivity fragmentActivity) {
+        Fragment current = fragmentActivity.getSupportFragmentManager().findFragmentById(R.id.container_fragment);
+        if(current instanceof MainMenuFragment && ((MainMenuFragment) current).isTwoPane()) {
+            return (MainMenuFragment) current;
+        }
+        return null;
+    }
+
+    /**
+     * Open a screen. In the two-pane landscape main menu it opens in the right pane,
+     * otherwise it swaps the main fragment with it.
+     */
     public static void swapFragment(FragmentActivity fragmentActivity , Class<? extends Fragment> fragmentClass,
                                     @Nullable String fragmentTag, @Nullable Bundle bundle) {
+        MainMenuFragment mainMenu = getTwoPaneMainMenu(fragmentActivity);
+        if(mainMenu != null && fragmentClass != MainMenuFragment.class
+                && mainMenu.openInPane(fragmentClass, fragmentTag, bundle)) return;
+        swapFragmentFullScreen(fragmentActivity, fragmentClass, fragmentTag, bundle);
+    }
+
+    /** Swap the main fragment with another, even if the main menu has a right pane to open it in */
+    public static void swapFragmentFullScreen(FragmentActivity fragmentActivity , Class<? extends Fragment> fragmentClass,
+                                    @Nullable String fragmentTag, @Nullable Bundle bundle) {
         // When people tab out, it might happen
-        //TODO handle custom animations
         fragmentActivity.getSupportFragmentManager().beginTransaction()
                 .setReorderingAllowed(true)
                 .addToBackStack(fragmentClass.getName())
@@ -743,12 +765,28 @@ public final class Tools {
     }
 
     public static void backToMainMenu(FragmentActivity fragmentActivity) {
+        MainMenuFragment mainMenu = getTwoPaneMainMenu(fragmentActivity);
+        if(mainMenu != null) mainMenu.clearRightPane();
         fragmentActivity.getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+    }
 
+    /** Show the main menu: closes the screens of the right pane, or opens a new main menu if there is none */
+    public static void swapToMainMenu(FragmentActivity fragmentActivity) {
+        MainMenuFragment mainMenu = getTwoPaneMainMenu(fragmentActivity);
+        if(mainMenu != null) {
+            mainMenu.clearRightPane();
+            return;
+        }
+        swapFragmentFullScreen(fragmentActivity, MainMenuFragment.class, MainMenuFragment.TAG, null);
     }
 
     /** Remove the current fragment */
     public static void removeCurrentFragment(FragmentActivity fragmentActivity){
+        MainMenuFragment mainMenu = getTwoPaneMainMenu(fragmentActivity);
+        if(mainMenu != null && mainMenu.isRightPaneActive()) {
+            mainMenu.popRightPane();
+            return;
+        }
         fragmentActivity.getSupportFragmentManager().popBackStack();
     }
 

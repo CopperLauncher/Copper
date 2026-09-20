@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Default content of the right pane in the two-pane landscape main menu -->
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top"
+        android:orientation="horizontal">
+
+        <com.kdt.mcgui.LauncherMenuButton
+            android:id="@+id/news_button_pane"
+            style="@style/LauncherMenuButton.Universal"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:drawableStart="@drawable/ic_px_book"
+            android:text="@string/mcl_tab_wiki" />
+
+        <com.kdt.mcgui.LauncherMenuButton
+            android:id="@+id/social_media_button_pane"
+            style="@style/LauncherMenuButton.Universal"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:drawableStart="@drawable/ic_social_media"
+            android:text="@string/mcl_button_social_media" />
+    </LinearLayout>
+</FrameLayout>

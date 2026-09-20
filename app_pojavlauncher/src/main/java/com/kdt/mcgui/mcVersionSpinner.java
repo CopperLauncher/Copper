@@ -133,6 +133,8 @@ public class mcVersionSpinner extends ExtendedTextView {
                     mPopupWindow.dismiss();
                     return;
                 }
+                // Match the spinner, it does not span the whole screen in the two-pane layout
+                mPopupWindow.setWidth(getWidth());
                 mPopupWindow.showAsDropDown(mcVersionSpinner.this, 0, offset);
                 // Post() is required for the layout inflation phase
                 post(() -> mListView.setSelection(mSelectedIndex));

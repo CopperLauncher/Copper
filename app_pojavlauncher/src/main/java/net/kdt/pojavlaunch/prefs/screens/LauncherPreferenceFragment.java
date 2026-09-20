@@ -1,6 +1,10 @@
 package net.kdt.pojavlaunch.prefs.screens;
 
 
+import net.kdt.pojavlaunch.prefs.BackButtonPreference;
+import net.kdt.pojavlaunch.fragments.SettingsHostFragment;
+import androidx.preference.PreferenceScreen;
+import android.content.res.Configuration;
 import android.content.pm.ActivityInfo;
 import net.kdt.pojavlaunch.utils.AnimationManager;
 import net.kdt.pojavlaunch.utils.ThemeColors;
@@ -30,7 +34,8 @@ public class LauncherPreferenceFragment extends PreferenceFragmentCompat impleme
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        view.setBackgroundColor(ThemeColors.surface(view.getContext()));
+        // The list of categories in the left pane of the two-pane settings draws on the host background
+        if(!isSettingsListPane()) view.setBackgroundColor(ThemeColors.surface(view.getContext()));
         super.onViewCreated(view, savedInstanceState);
         AnimationManager.applyListAnimation(getListView());
     }
@@ -39,7 +44,28 @@ public class LauncherPreferenceFragment extends PreferenceFragmentCompat impleme
     public void onCreatePreferences(Bundle b, String str) {
         mVisibilityUpdater = this::updateVisibility;
         addPreferencesFromResource(R.xml.pref_main);
+        // The right pane of the two-pane settings has its own back button
+        if(isSettingsListPane()) removeBackButton();
         setupNotificationRequestPreference();
+    }
+
+    /** @return whether this is the list of categories inside the left pane of the two-pane settings */
+    private boolean isSettingsListPane() {
+        // Only the category list itself, not the categories that extend this fragment
+        return getClass() == LauncherPreferenceFragment.class
+                && getParentFragment() instanceof SettingsHostFragment
+                && getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
+    }
+
+    private void removeBackButton() {
+        PreferenceScreen screen = getPreferenceScreen();
+        for(int i = 0; i < screen.getPreferenceCount(); i++) {
+            Preference preference = screen.getPreference(i);
+            if(preference instanceof BackButtonPreference) {
+                screen.removePreference(preference);
+                return;
+            }
+        }
     }
 
     private void updateVisibility(){

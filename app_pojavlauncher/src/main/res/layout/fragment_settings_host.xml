@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Portrait fallback: a single pane. Only reached if the device is rotated while the two-pane settings are open. -->
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?attr/colorSurface">
+
+    <FrameLayout
+        android:id="@+id/settings_left_pane_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <FrameLayout
+        android:id="@+id/settings_right_pane_container"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:visibility="gone" />
+</FrameLayout>
