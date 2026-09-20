@@ -137,8 +137,6 @@ public class MainMenuFragment extends Fragment {
         // Portrait only
         Button mNewsButton = view.findViewById(R.id.news_button);
         Button mDiscordButton = view.findViewById(R.id.social_media_button);
-        // Landscape only
-        Button mModStoreButton = view.findViewById(R.id.mod_store_button);
         // Both
         Button mCustomControlButton = view.findViewById(R.id.custom_control_button);
         Button mInstallJarButton = view.findViewById(R.id.install_jar_button);
@@ -184,9 +182,6 @@ public class MainMenuFragment extends Fragment {
         }
         if (mDiscordButton != null)
             mDiscordButton.setOnClickListener(v -> Tools.openURL(requireActivity(), getString(R.string.social_media_invite)));
-        if (mModStoreButton != null)
-            mModStoreButton.setOnClickListener(v -> Tools.swapFragment(requireActivity(),
-                    SearchModFragment.class, SearchModFragment.TAG, null));
 
         mCustomControlButton.setOnClickListener(v -> startActivity(new Intent(requireContext(), CustomControlsActivity.class)));
         mInstallJarButton.setOnClickListener(v -> runInstallerWithConfirmation());

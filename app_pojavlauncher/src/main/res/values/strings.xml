@@ -547,7 +547,4 @@
     <string name="preference_theme_color_dialog_hint">Pick any color. The launcher theme is generated from it.</string>
     <string name="preference_theme_color_hex">Hex color</string>
     <string name="preference_theme_color_reset">Reset</string>
-    <string name="mcl_section_quick_actions">Quick actions</string>
-    <string name="mcl_section_instance_tools">Instance tools</string>
-    <string name="mcl_button_mod_store">Browse content</string>
 </resources>
