@@ -28,6 +28,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.chip.ChipGroup;
 import com.kdt.mcgui.ProgressLayout;
 
 import git.artdeell.mojo.R;
@@ -37,6 +38,7 @@ import net.kdt.pojavlaunch.Tools;
 import net.kdt.pojavlaunch.modloaders.modpacks.ModItemAdapter;
 import net.kdt.pojavlaunch.modloaders.modpacks.api.CommonApi;
 import net.kdt.pojavlaunch.modloaders.modpacks.api.ModpackApi;
+import net.kdt.pojavlaunch.modloaders.modpacks.models.Constants;
 import net.kdt.pojavlaunch.modloaders.modpacks.models.SearchFilters;
 import net.kdt.pojavlaunch.profiles.VersionSelectorDialog;
 import net.kdt.pojavlaunch.progresskeeper.ProgressKeeper;
@@ -210,6 +212,35 @@ public class SearchModFragment extends Fragment implements ModItemAdapter.Search
         mModItemAdapter.performSearchQuery(mSearchFilters);
     }
 
+    private static int getLoaderChipId(@Nullable String loader) {
+        if (Constants.LOADER_FABRIC.equals(loader)) return R.id.search_mod_loader_fabric;
+        if (Constants.LOADER_FORGE.equals(loader)) return R.id.search_mod_loader_forge;
+        if (Constants.LOADER_NEOFORGE.equals(loader)) return R.id.search_mod_loader_neoforge;
+        if (Constants.LOADER_QUILT.equals(loader)) return R.id.search_mod_loader_quilt;
+        return R.id.search_mod_loader_any;
+    }
+
+    @Nullable
+    private static String getLoaderForChip(int chipId) {
+        if (chipId == R.id.search_mod_loader_fabric) return Constants.LOADER_FABRIC;
+        if (chipId == R.id.search_mod_loader_forge) return Constants.LOADER_FORGE;
+        if (chipId == R.id.search_mod_loader_neoforge) return Constants.LOADER_NEOFORGE;
+        if (chipId == R.id.search_mod_loader_quilt) return Constants.LOADER_QUILT;
+        return null;
+    }
+
+    private static int getSourceChipId(int source) {
+        if (source == SearchFilters.SOURCE_CURSEFORGE) return R.id.search_mod_source_curseforge;
+        if (source == SearchFilters.SOURCE_BOTH) return R.id.search_mod_source_both;
+        return R.id.search_mod_source_modrinth;
+    }
+
+    private static int getSourceForChip(int chipId) {
+        if (chipId == R.id.search_mod_source_curseforge) return SearchFilters.SOURCE_CURSEFORGE;
+        if (chipId == R.id.search_mod_source_both) return SearchFilters.SOURCE_BOTH;
+        return SearchFilters.SOURCE_MODRINTH;
+    }
+
     private void displayFilterDialog() {
         AlertDialog dialog = new MaterialAlertDialogBuilder(requireContext())
                 .setView(R.layout.dialog_mod_filters)
@@ -220,20 +251,40 @@ public class SearchModFragment extends Fragment implements ModItemAdapter.Search
             TextView mSelectedVersion = dialog.findViewById(R.id.search_mod_selected_mc_version_textview);
             Button mSelectVersionButton = dialog.findViewById(R.id.search_mod_mc_version_button);
             Button mApplyButton = dialog.findViewById(R.id.search_mod_apply_filters);
+            ChipGroup loaderGroup = dialog.findViewById(R.id.search_mod_loader_group);
+            ChipGroup sourceGroup = dialog.findViewById(R.id.search_mod_source_group);
+            View sourceTitle = dialog.findViewById(R.id.search_mod_source_title);
 
             assert mSelectVersionButton != null;
             assert mSelectedVersion != null;
             assert mApplyButton != null;
+            assert loaderGroup != null;
+            assert sourceGroup != null;
+            assert sourceTitle != null;
+
+            // Without a CurseForge key, Modrinth is the only source
+            boolean curseforgeAvailable = !(modpackApi instanceof CommonApi)
+                    || ((CommonApi) modpackApi).isCurseforgeAvailable();
+            if (!curseforgeAvailable) {
+                sourceTitle.setVisibility(View.GONE);
+                sourceGroup.setVisibility(View.GONE);
+            }
 
             // Setup the expendable list behavior
             mSelectVersionButton.setOnClickListener(v -> VersionSelectorDialog.open(v.getContext(), true, (id, snapshot)-> mSelectedVersion.setText(id)));
 
             // Apply visually all the current settings
             mSelectedVersion.setText(mSearchFilters.mcVersion);
+            loaderGroup.check(getLoaderChipId(mSearchFilters.loader));
+            sourceGroup.check(getSourceChipId(mSearchFilters.source));
 
             // Apply the new settings
             mApplyButton.setOnClickListener(v -> {
                 mSearchFilters.mcVersion = mSelectedVersion.getText().toString();
+                mSearchFilters.loader = getLoaderForChip(loaderGroup.getCheckedChipId());
+                mSearchFilters.source = curseforgeAvailable
+                        ? getSourceForChip(sourceGroup.getCheckedChipId())
+                        : SearchFilters.SOURCE_MODRINTH;
                 searchMods(mSearchEditText.getText().toString());
                 dialogInterface.dismiss();
             });

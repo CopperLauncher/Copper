@@ -56,6 +56,8 @@ public class CommonApi implements ModpackApi {
 
         Future<?>[] futures = new Future<?>[mModpackApis.length];
         for(int i = 0; i < mModpackApis.length; i++) {
+            // Skip the sources that the user filtered out
+            if(!isApiSelected(mModpackApis[i], searchFilters)) continue;
             // If there is an array and its length is zero, this means that we've exhausted the results for this
             // search query and we don't need to actually do the search
             if(results[i] != null && results[i].results.length == 0) continue;
@@ -112,6 +114,25 @@ public class CommonApi implements ModpackApi {
         commonApiSearchResult.totalResultCount = totalSize;
         commonApiSearchResult.results = concatenatedItems;
         return commonApiSearchResult;
+    }
+
+    /** @return whether CurseForge can be used, it needs an API key that this build may not have */
+    public boolean isCurseforgeAvailable() {
+        return mCurseforgeApi != null;
+    }
+
+    private boolean isApiSelected(ModpackApi api, SearchFilters searchFilters) {
+        // Without CurseForge the only thing that can be searched is Modrinth
+        if(mCurseforgeApi == null) return true;
+        switch (searchFilters.source) {
+            case SearchFilters.SOURCE_CURSEFORGE:
+                return api == mCurseforgeApi;
+            case SearchFilters.SOURCE_BOTH:
+                return true;
+            case SearchFilters.SOURCE_MODRINTH:
+            default:
+                return api == mModrinthApi;
+        }
     }
 
     @Override

@@ -33,7 +33,9 @@ import net.kdt.pojavlaunch.modloaders.modpacks.models.SearchFilters;
 import net.kdt.pojavlaunch.modloaders.modpacks.models.SearchResult;
 import net.kdt.pojavlaunch.progresskeeper.TaskCountListener;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Collections;
 import java.util.Set;
 import java.util.WeakHashMap;
@@ -161,6 +163,8 @@ public class ModItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         private Bitmap mThumbnailBitmap;
         private ImageReceiver mImageReceiver;
         private boolean mInstallEnabled;
+        /* Maps the spinner positions to the versions of mModDetail that match the search filters */
+        private int[] mVisibleVersions = new int[0];
 
         /* Used to display available versions of the mod(pack) */
         private final SimpleArrayAdapter<String> mVersionAdapter = new SimpleArrayAdapter<>(null);
@@ -176,10 +180,14 @@ public class ModItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                     mExtendedSpinner = mExtendedLayout.findViewById(R.id.mod_extended_version_spinner);
                     mExtendedErrorTextView = mExtendedLayout.findViewById(R.id.mod_extended_error_textview);
 
-                    mExtendedButton.setOnClickListener(v1 -> mModpackApi.handleModpackInstallation(
-                            mExtendedButton.getContext().getApplicationContext(),
-                            mModDetail,
-                            mExtendedSpinner.getSelectedItemPosition()));
+                    mExtendedButton.setOnClickListener(v1 -> {
+                        int position = mExtendedSpinner.getSelectedItemPosition();
+                        if(mModDetail == null || position < 0 || position >= mVisibleVersions.length) return;
+                        mModpackApi.handleModpackInstallation(
+                                mExtendedButton.getContext().getApplicationContext(),
+                                mModDetail,
+                                mVisibleVersions[position]);
+                    });
                     mExtendedSpinner.setAdapter(mLoadingAdapter);
                 } else {
                     if(isExtended()) closeDetailedView();
@@ -270,13 +278,27 @@ public class ModItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         /** Display extended info/interaction about a modpack */
         private void setStateDetailed(ModDetail detailedItem) {
             if(detailedItem != null) {
+                // Only offer the versions that match the mod loader and Minecraft version of the search filters
+                String mcVersion = mSearchFilters != null ? mSearchFilters.mcVersion : null;
+                String loader = mSearchFilters != null ? mSearchFilters.loader : null;
+                mVisibleVersions = detailedItem.getMatchingVersions(mcVersion, loader);
+                List<String> visibleNames = new ArrayList<>(mVisibleVersions.length);
+                for(int index : mVisibleVersions) visibleNames.add(detailedItem.versionNames[index]);
+                mVersionAdapter.setObjects(visibleNames);
+                mExtendedSpinner.setAdapter(mVersionAdapter);
+                if(visibleNames.isEmpty()) {
+                    setInstallEnabled(false);
+                    mExtendedErrorTextView.setText(R.string.search_modpack_no_matching_versions);
+                    mExtendedErrorTextView.setVisibility(View.VISIBLE);
+                    return;
+                }
                 setInstallEnabled(true);
                 mExtendedErrorTextView.setVisibility(View.GONE);
-                mVersionAdapter.setObjects(Arrays.asList(detailedItem.versionNames));
-                mExtendedSpinner.setAdapter(mVersionAdapter);
             } else {
+                mVisibleVersions = new int[0];
                 closeDetailedView();
                 setInstallEnabled(false);
+                mExtendedErrorTextView.setText(R.string.search_modpack_download_error);
                 mExtendedErrorTextView.setVisibility(View.VISIBLE);
                 mExtendedSpinner.setAdapter(null);
                 mVersionAdapter.setObjects(null);

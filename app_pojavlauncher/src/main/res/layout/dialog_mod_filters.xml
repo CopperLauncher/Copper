@@ -1,61 +1,163 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:paddingHorizontal="@dimen/padding_heavy"
-    android:paddingBottom="@dimen/padding_large"
-    android:paddingTop="@dimen/padding_heavy"
-    >
+    android:layout_height="wrap_content"
+    android:fillViewport="true">
 
-    <!-- Version filter -->
-    <TextView
-        android:id="@+id/search_mod_mc_version_textview"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/profiles_profile_version"
-        app:layout_constraintTop_toTopOf="parent"
-
-        app:layout_constraintStart_toStartOf="@+id/search_mod_selected_mc_version_textview" />
-
-    <TextView
-        android:id="@+id/search_mod_selected_mc_version_textview"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-
-        android:layout_marginEnd="@dimen/padding_medium"
-
-        android:background="@drawable/background_line"
-        android:hint="@string/version_select_hint"
-        android:paddingHorizontal="@dimen/padding_heavy"
-        android:textSize="@dimen/_13ssp"
-
-        app:layout_constraintEnd_toStartOf="@+id/search_mod_mc_version_button"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/search_mod_mc_version_textview" />
-
-    <Button
-        android:id="@+id/search_mod_mc_version_button"
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:paddingHorizontal="@dimen/padding_large"
-
-        android:text="@string/global_select"
-
-        app:layout_constraintBottom_toBottomOf="@+id/search_mod_selected_mc_version_textview"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/search_mod_selected_mc_version_textview" />
-
-    <!-- Apply -->
-    <com.kdt.mcgui.MineButton
-        android:id="@+id/search_mod_apply_filters"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/generic_apply"
-        android:layout_marginVertical="@dimen/padding_large"
+        android:paddingHorizontal="@dimen/padding_heavy"
+        android:paddingBottom="@dimen/padding_large"
+        android:paddingTop="@dimen/padding_heavy">
 
-        app:layout_constraintTop_toBottomOf="@id/search_mod_selected_mc_version_textview"
-        />
+        <!-- Version filter -->
+        <TextView
+            android:id="@+id/search_mod_mc_version_textview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/profiles_profile_version"
+            app:layout_constraintTop_toTopOf="parent"
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+            app:layout_constraintStart_toStartOf="@+id/search_mod_selected_mc_version_textview" />
+
+        <TextView
+            android:id="@+id/search_mod_selected_mc_version_textview"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+
+            android:layout_marginEnd="@dimen/padding_medium"
+
+            android:background="@drawable/background_line"
+            android:hint="@string/version_select_hint"
+            android:paddingHorizontal="@dimen/padding_heavy"
+            android:textSize="@dimen/_13ssp"
+
+            app:layout_constraintEnd_toStartOf="@+id/search_mod_mc_version_button"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/search_mod_mc_version_textview" />
+
+        <Button
+            android:id="@+id/search_mod_mc_version_button"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:paddingHorizontal="@dimen/padding_large"
+
+            android:text="@string/global_select"
+
+            app:layout_constraintBottom_toBottomOf="@+id/search_mod_selected_mc_version_textview"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/search_mod_selected_mc_version_textview" />
+
+        <!-- Mod loader filter -->
+        <TextView
+            android:id="@+id/search_mod_loader_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/padding_large"
+            android:text="@string/search_filter_loader"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/search_mod_selected_mc_version_textview" />
+
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/search_mod_loader_group"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:selectionRequired="true"
+            app:singleSelection="true"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/search_mod_loader_title">
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/search_mod_loader_any"
+                style="@style/Widget.Material3.Chip.Filter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/search_filter_any" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/search_mod_loader_fabric"
+                style="@style/Widget.Material3.Chip.Filter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/search_filter_fabric" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/search_mod_loader_forge"
+                style="@style/Widget.Material3.Chip.Filter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/search_filter_forge" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/search_mod_loader_neoforge"
+                style="@style/Widget.Material3.Chip.Filter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/search_filter_neoforge" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/search_mod_loader_quilt"
+                style="@style/Widget.Material3.Chip.Filter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/search_filter_quilt" />
+        </com.google.android.material.chip.ChipGroup>
+
+        <!-- Source filter -->
+        <TextView
+            android:id="@+id/search_mod_source_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/padding_medium"
+            android:text="@string/search_filter_source"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/search_mod_loader_group" />
+
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/search_mod_source_group"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:selectionRequired="true"
+            app:singleSelection="true"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/search_mod_source_title">
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/search_mod_source_modrinth"
+                style="@style/Widget.Material3.Chip.Filter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/search_filter_modrinth" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/search_mod_source_curseforge"
+                style="@style/Widget.Material3.Chip.Filter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/search_filter_curseforge" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/search_mod_source_both"
+                style="@style/Widget.Material3.Chip.Filter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/search_filter_both" />
+        </com.google.android.material.chip.ChipGroup>
+
+        <!-- Apply -->
+        <com.kdt.mcgui.MineButton
+            android:id="@+id/search_mod_apply_filters"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/generic_apply"
+            android:layout_marginVertical="@dimen/padding_large"
+
+            app:layout_constraintTop_toBottomOf="@id/search_mod_source_group"
+            />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>

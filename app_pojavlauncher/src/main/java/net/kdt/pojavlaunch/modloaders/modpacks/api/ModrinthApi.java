@@ -60,6 +60,9 @@ public class ModrinthApi implements ModpackApi{
         facetString.append(String.format("[\"project_type:%s\"]", searchFilters.isModpack ? "modpack" : "mod"));
         if(searchFilters.mcVersion != null && !searchFilters.mcVersion.isEmpty())
             facetString.append(String.format(",[\"versions:%s\"]", searchFilters.mcVersion));
+        // Modrinth uses the mod loader names as categories
+        if(searchFilters.loader != null && !searchFilters.loader.isEmpty())
+            facetString.append(String.format(",[\"categories:%s\"]", searchFilters.loader));
         facetString.append("]");
         params.put("facets", facetString.toString());
         params.put("query", searchFilters.name);
@@ -102,11 +105,15 @@ public class ModrinthApi implements ModpackApi{
         String[] mcNames = new String[response.size()];
         String[] urls = new String[response.size()];
         String[] hashes = new String[response.size()];
+        String[][] allGameVersions = new String[response.size()][];
+        String[][] allLoaders = new String[response.size()][];
 
         for (int i=0; i<response.size(); ++i) {
             JsonObject version = response.get(i).getAsJsonObject();
             names[i] = version.get("name").getAsString();
-            mcNames[i] = version.get("game_versions").getAsJsonArray().get(0).getAsString();
+            allGameVersions[i] = readStringArray(version.getAsJsonArray("game_versions"), false);
+            allLoaders[i] = readStringArray(version.getAsJsonArray("loaders"), true);
+            mcNames[i] = allGameVersions[i].length > 0 ? allGameVersions[i][0] : null;
             urls[i] = version.get("files").getAsJsonArray().get(0).getAsJsonObject().get("url").getAsString();
             // Assume there may not be hashes, in case the API changes
             JsonObject hashesMap = version.getAsJsonArray("files").get(0).getAsJsonObject()
@@ -119,7 +126,17 @@ public class ModrinthApi implements ModpackApi{
             hashes[i] = hashesMap.get("sha1").getAsString();
         }
 
-        return new ModDetail(item, names, mcNames, urls, hashes);
+        return new ModDetail(item, names, mcNames, urls, hashes, allGameVersions, allLoaders);
+    }
+
+    private static String[] readStringArray(JsonArray array, boolean lowerCase) {
+        if(array == null) return new String[0];
+        String[] result = new String[array.size()];
+        for(int i = 0; i < result.length; i++) {
+            String value = array.get(i).getAsString();
+            result[i] = lowerCase ? value.toLowerCase(java.util.Locale.ROOT) : value;
+        }
+        return result;
     }
 
     @Override

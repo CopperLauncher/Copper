@@ -67,8 +67,15 @@ public class CurseforgeApi implements ModpackApi{
         params.put("searchFilter", searchFilters.name);
         params.put("sortField", CURSEFORGE_SORT_RELEVANCY);
         params.put("sortOrder", "desc");
-        if(searchFilters.mcVersion != null && !searchFilters.mcVersion.isEmpty())
+        int loaderType = getLoaderType(searchFilters.loader);
+        boolean hasMcVersion = searchFilters.mcVersion != null && !searchFilters.mcVersion.isEmpty();
+        if(hasMcVersion) {
             params.put("gameVersion", searchFilters.mcVersion);
+            // CurseForge only accepts the mod loader together with a game version
+            if(loaderType != 0) params.put("modLoaderType", loaderType);
+        }
+        // Without a game version the loader has to be filtered from the results
+        boolean filterLoaderLocally = loaderType != 0 && !hasMcVersion;
         if(previousPageResult != null)
             params.put("index", curseforgeSearchResult.previousOffset);
 
@@ -87,6 +94,7 @@ public class CurseforgeApi implements ModpackApi{
                 Log.i("CurseforgeApi", "Skipping modpack "+dataElement.get("name").getAsString() + " because curseforge sucks");
                 continue;
             }
+            if(filterLoaderLocally && !supportsLoader(dataElement, loaderType)) continue;
             ModItem modItem = new ModItem(Constants.SOURCE_CURSEFORGE,
                     searchFilters.isModpack,
                     dataElement.get("id").getAsString(),
@@ -103,6 +111,30 @@ public class CurseforgeApi implements ModpackApi{
 
     }
 
+    /** @return the CurseForge ModLoaderType for a loader filter, 0 for any */
+    private static int getLoaderType(String loader) {
+        if(loader == null) return 0;
+        switch (loader) {
+            case Constants.LOADER_FORGE: return 1;
+            case Constants.LOADER_FABRIC: return 4;
+            case Constants.LOADER_QUILT: return 5;
+            case Constants.LOADER_NEOFORGE: return 6;
+            default: return 0;
+        }
+    }
+
+    /** Checks the latest files of a search result for the mod loader. Keeps the result if it has no such data */
+    private static boolean supportsLoader(JsonObject searchResult, int loaderType) {
+        JsonArray fileIndexes = GsonJsonUtils.getJsonArraySafe(searchResult, "latestFilesIndexes");
+        if(fileIndexes == null || fileIndexes.size() == 0) return true;
+        for(JsonElement element : fileIndexes) {
+            if(!element.isJsonObject()) continue;
+            JsonElement modLoader = element.getAsJsonObject().get("modLoader");
+            if(modLoader != null && modLoader.isJsonPrimitive() && modLoader.getAsInt() == loaderType) return true;
+        }
+        return false;
+    }
+
     @Override
     public ModDetail getModDetails(ModItem item) {
         ArrayList<JsonObject> allModDetails = new ArrayList<>();
@@ -117,6 +149,8 @@ public class CurseforgeApi implements ModpackApi{
         String[] mcVersionNames = new String[length];
         String[] versionUrls = new String[length];
         String[] hashes = new String[length];
+        String[][] allGameVersions = new String[length][];
+        String[][] allLoaders = new String[length][];
         for(int i = 0; i < allModDetails.size(); i++) {
             JsonObject modDetail = allModDetails.get(i);
             versionNames[i] = modDetail.get("displayName").getAsString();
@@ -125,18 +159,28 @@ public class CurseforgeApi implements ModpackApi{
             versionUrls[i] = downloadUrl.getAsString();
 
             JsonArray gameVersions = modDetail.getAsJsonArray("gameVersions");
+            ArrayList<String> mcVersions = new ArrayList<>();
+            ArrayList<String> loaders = new ArrayList<>();
             for(JsonElement jsonElement : gameVersions) {
                 String gameVersion = jsonElement.getAsString();
                 if(!sMcVersionPattern.matcher(gameVersion).matches()) {
+                    // CurseForge lists the mod loaders next to the game versions
+                    String lowerCase = gameVersion.toLowerCase(java.util.Locale.ROOT);
+                    if(lowerCase.equals(Constants.LOADER_FABRIC) || lowerCase.equals(Constants.LOADER_FORGE)
+                            || lowerCase.equals(Constants.LOADER_NEOFORGE) || lowerCase.equals(Constants.LOADER_QUILT)) {
+                        loaders.add(lowerCase);
+                    }
                     continue;
                 }
-                mcVersionNames[i] = gameVersion;
-                break;
+                mcVersions.add(gameVersion);
             }
+            if(!mcVersions.isEmpty()) mcVersionNames[i] = mcVersions.get(0);
+            allGameVersions[i] = mcVersions.toArray(new String[0]);
+            allLoaders[i] = loaders.toArray(new String[0]);
 
             hashes[i] = getSha1FromModData(modDetail);
         }
-        return new ModDetail(item, versionNames, mcVersionNames, versionUrls, hashes);
+        return new ModDetail(item, versionNames, mcVersionNames, versionUrls, hashes, allGameVersions, allLoaders);
     }
 
     @Override

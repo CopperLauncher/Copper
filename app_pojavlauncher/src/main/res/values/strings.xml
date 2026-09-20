@@ -342,6 +342,17 @@
     <string name="search_modpack_no_result">No modpacks found</string>
     <string name="search_modpack_error">Failed to find modpacks</string>
     <string name="search_modpack_download_error">Failed to download modpack metadata</string>
+    <string name="search_modpack_no_matching_versions">No versions match the selected filters</string>
+    <string name="search_filter_loader">Mod loader</string>
+    <string name="search_filter_source">Source</string>
+    <string name="search_filter_any">Any</string>
+    <string name="search_filter_both">Both</string>
+    <string name="search_filter_modrinth" translatable="false">Modrinth</string>
+    <string name="search_filter_curseforge" translatable="false">CurseForge</string>
+    <string name="search_filter_fabric" translatable="false">Fabric</string>
+    <string name="search_filter_forge" translatable="false">Forge</string>
+    <string name="search_filter_neoforge" translatable="false">NeoForge</string>
+    <string name="search_filter_quilt" translatable="false">Quilt</string>
 
     <string name="modpack_download_downloading_metadata">Downloading modpack metadata (%.2f MB / %.2f MB)</string>
     <string name="modpack_download_downloading_mods">Downloading mods (%.2f MB / %.2f MB)</string>
