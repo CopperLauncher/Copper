@@ -1,7 +1,16 @@
 package net.kdt.pojavlaunch.prefs.screens;
 
+import android.app.Activity;
+import android.content.Context;
+import android.net.Uri;
+import android.widget.Toast;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import net.kdt.pojavlaunch.PojavApplication;
+import net.kdt.pojavlaunch.utils.LauncherBackground;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.preference.ListPreference;
 import androidx.preference.MultiSelectListPreference;
 import androidx.preference.Preference;
@@ -19,11 +28,52 @@ import git.artdeell.mojo.R;
  */
 public class LauncherPreferenceAppearanceFragment extends LauncherPreferenceFragment {
 
+    private final ActivityResultLauncher<String[]> mBackgroundPicker =
+            registerForActivityResult(new ActivityResultContracts.OpenDocument(), uri -> {
+                if (uri != null) applyBackground(uri);
+            });
+
     @Override
     public void onCreatePreferences(Bundle b, String str) {
         addPreferencesFromResource(R.xml.pref_appearance);
         setupCustomColorVisibility();
+        setupBackground();
         setupAnimationPreference();
+    }
+
+    private void setupBackground() {
+        Preference setPreference = requirePreference("set_custom_launcher_bg");
+        Preference removePreference = requirePreference("remove_custom_launcher_bg");
+        removePreference.setEnabled(LauncherBackground.exists());
+
+        setPreference.setOnPreferenceClickListener(preference -> {
+            // GIFs are images, videos need to be MP4 or anything else Android can play
+            mBackgroundPicker.launch(new String[]{"image/*", "video/*"});
+            return true;
+        });
+        removePreference.setOnPreferenceClickListener(preference -> {
+            LauncherBackground.remove(requireContext());
+            removePreference.setEnabled(false);
+            Toast.makeText(requireContext(), R.string.preference_custom_bg_removed, Toast.LENGTH_SHORT).show();
+            return true;
+        });
+    }
+
+    /** The copy of a big video takes a while, it runs in the background */
+    private void applyBackground(@NonNull Uri uri) {
+        Context appContext = requireContext().getApplicationContext();
+        Toast.makeText(appContext, R.string.preference_custom_bg_applying, Toast.LENGTH_SHORT).show();
+        PojavApplication.sExecutorService.execute(() -> {
+            boolean success = LauncherBackground.setFromUri(appContext, uri);
+            Activity activity = getActivity();
+            if (activity == null) return;
+            activity.runOnUiThread(() -> {
+                Toast.makeText(appContext, success ? R.string.preference_custom_bg_set_success
+                        : R.string.preference_custom_bg_error, Toast.LENGTH_SHORT).show();
+                Preference removePreference = findPreference("remove_custom_launcher_bg");
+                if (removePreference != null) removePreference.setEnabled(LauncherBackground.exists());
+            });
+        });
     }
 
     /** The custom color is only relevant, and only shown, when the custom color source is selected */

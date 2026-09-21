@@ -5,6 +5,22 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <!-- Custom background, loaded by RightPaneHomeFragment. An image or a GIF... -->
+    <ImageView
+        android:id="@+id/right_pane_wallpaper"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:contentDescription="@null"
+        android:scaleType="centerCrop"
+        android:visibility="gone" />
+
+    <!-- ...or a looping muted video -->
+    <com.kdt.mcgui.CenterCropVideoView
+        android:id="@+id/right_pane_wallpaper_video"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

@@ -536,6 +536,15 @@
     <string name="preference_category_theme">Theme</string>
     <string name="preference_category_display">Display</string>
     <string name="preference_category_animations">Animations</string>
+    <string name="preference_category_background">Background</string>
+    <string name="preference_set_custom_bg_title">Set custom background</string>
+    <string name="preference_set_custom_bg_summary">Pick an image, an animated GIF or a video (MP4) to show on the home screen of the right pane in landscape. Videos are muted and looped.</string>
+    <string name="preference_remove_custom_bg_title">Remove custom background</string>
+    <string name="preference_remove_custom_bg_summary">Go back to the plain background.</string>
+    <string name="preference_custom_bg_applying">Applying the background\u2026</string>
+    <string name="preference_custom_bg_set_success">Custom background applied.</string>
+    <string name="preference_custom_bg_removed">Custom background removed.</string>
+    <string name="preference_custom_bg_error">Failed to load the selected file.</string>
     <string name="preference_force_landscape_title">Force landscape</string>
     <string name="preference_force_landscape_description">Keep the launcher in landscape orientation</string>
     <string name="preference_animations_title">Animation types</string>

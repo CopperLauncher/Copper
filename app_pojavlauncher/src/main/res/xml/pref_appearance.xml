@@ -37,6 +37,19 @@
             app:iconSpaceReserved="false" />
     </PreferenceCategory>
 
+    <PreferenceCategory android:title="@string/preference_category_background">
+        <Preference
+            android:key="set_custom_launcher_bg"
+            android:title="@string/preference_set_custom_bg_title"
+            android:summary="@string/preference_set_custom_bg_summary"
+            app:iconSpaceReserved="false" />
+        <Preference
+            android:key="remove_custom_launcher_bg"
+            android:title="@string/preference_remove_custom_bg_title"
+            android:summary="@string/preference_remove_custom_bg_summary"
+            app:iconSpaceReserved="false" />
+    </PreferenceCategory>
+
     <PreferenceCategory android:title="@string/preference_category_animations">
         <androidx.preference.MultiSelectListPreference
             android:defaultValue="@array/animation_type_defaults"
