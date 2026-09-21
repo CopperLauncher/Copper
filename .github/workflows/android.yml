@@ -52,8 +52,18 @@ jobs:
           java-version: '17'
       - name: Create out directory
         run: mkdir out
+      - name: Decode release keystores
+        if: github.repository_owner == 'CopperLauncher' && (github.ref_name == 'v3_openjdk' || startsWith(github.ref, 'refs/tags/v'))
+        run: |
+          if [ -n "${{ secrets.UPLOAD_KEYSTORE_BASE64 }}" ]; then
+            echo "${{ secrets.UPLOAD_KEYSTORE_BASE64 }}" | base64 -d > app_pojavlauncher/mojo_upload_next.jks
+          fi
+          if [ -n "${{ secrets.RELEASE_KEYSTORE_BASE64 }}" ]; then
+            echo "${{ secrets.RELEASE_KEYSTORE_BASE64 }}" | base64 -d > app_pojavlauncher/mojo_release_next.jks
+          fi
+
       - name: Build Publishing .aab
-        if: github.repository_owner == 'MojoLauncher' && github.ref_name == 'v3_openjdk'
+        if: github.repository_owner == 'CopperLauncher' && (github.ref_name == 'v3_openjdk' || startsWith(github.ref, 'refs/tags/v'))
         run: |
           gradle :app_pojavlauncher:bundleFullGplay
           mv app_pojavlauncher/build/outputs/bundle/fullGplay/app_pojavlauncher-full-gplay.aab out/app-gplay.aab
@@ -69,10 +79,10 @@ jobs:
           gradle :app_pojavlauncher:assembleNoruntimeDebug
           mv app_pojavlauncher/build/outputs/apk/noruntime/debug/app_pojavlauncher-noruntime-debug.apk out/app-debug-noruntime.apk
       - name: Build Nightly Release .apk
-        if: github.repository_owner == 'MojoLauncher' && github.ref_name == 'v3_openjdk'
+        if: github.repository_owner == 'CopperLauncher' && (github.ref_name == 'v3_openjdk' || startsWith(github.ref, 'refs/tags/v'))
         run: |
           gradle :app_pojavlauncher:assembleFullPubRelease
-          mv app_pojavlauncher/build/outputs/apk/full/pubRelease/app_pojavlauncher-full-pubRelease.apk out/MojoLauncher-release.apk
+          mv app_pojavlauncher/build/outputs/apk/full/pubRelease/app_pojavlauncher-full-pubRelease.apk out/Copper-release.apk
       - name: Gen md5sums
         run: |
           md5sum out/app-debug-full.apk > out/app-debug-full.md5
@@ -90,20 +100,28 @@ jobs:
           name: app-debug-noruntime
           path: out/app-debug-noruntime.apk
 
+      - name: Upload Release APK
+        if: github.repository_owner == 'CopperLauncher' && (github.ref_name == 'v3_openjdk' || startsWith(github.ref, 'refs/tags/v'))
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-release
+          path: out/Copper-release.apk
+
       - name: Release Nightly APK
-        if: github.repository_owner == 'MojoLauncher' && github.ref_name == 'v3_openjdk'
+        if: github.repository_owner == 'CopperLauncher' && github.ref_name == 'v3_openjdk'
         uses: softprops/action-gh-release@v3
         with:
-          name: MojoLauncher Nightly Builds
+          name: Copper Nightly Builds
           prerelease: true
           tag_name: nightly
           body: |
-            MojoLauncher nightly build.
+            Copper nightly build.
             Commit hash: ${{ github.sha }}
           files: |
-            out/MojoLauncher-release.apk
+            out/Copper-release.apk
 
       - name: Upload AAB
+        if: github.repository_owner == 'CopperLauncher' && (github.ref_name == 'v3_openjdk' || startsWith(github.ref, 'refs/tags/v'))
         uses: actions/upload-artifact@v4
         with:
           name: app-release-aab
@@ -111,7 +129,7 @@ jobs:
 
       - name: Upload onto the Google Play testing track
         continue-on-error: true
-        if: github.repository_owner == 'MojoLauncher' && github.ref_name == 'v3_openjdk'
+        if: github.repository_owner == 'CopperLauncher' && github.ref_name == 'v3_openjdk'
         uses: r0adkll/upload-google-play@v1.1.5
         with:
           serviceAccountJsonPlainText: ${{ secrets.SERVICE_JSON }}
