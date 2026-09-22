@@ -4,7 +4,7 @@
 
     <net.kdt.pojavlaunch.prefs.BackButtonPreference/>
 
-    <PreferenceCategory android:title="@string/preference_renderer_mobileglues_settings" android:icon="@drawable/ic_px_image_renderer">
+    <PreferenceCategory android:title="@string/preference_renderer_mobileglues_settings" android:icon="@drawable/ic_mg_renderer">
         <EditTextPreference
             android:title="@string/mg_renderer_glsl_cache"
             android:key="mg_renderer_setting_glsl_cache_size"

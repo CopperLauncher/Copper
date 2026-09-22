@@ -6,6 +6,7 @@ import android.util.Log;
 import net.kdt.pojavlaunch.Tools;
 import net.kdt.pojavlaunch.game.renderer.RenderSpec;
 import net.kdt.pojavlaunch.game.renderer.def.Renderers;
+import net.kdt.pojavlaunch.game.renderer.extra.GLESProvider;
 import net.kdt.pojavlaunch.prefs.LauncherPreferences;
 
 import java.io.File;
@@ -46,6 +47,17 @@ public class MobileGluesRenderSpec implements RenderSpec {
             // MobileGlues will just fall back to its own internal defaults.
             Log.e("MobileGluesRenderSpec", "Failed to write MG-ES renderer settings", e);
         }
+        // MobileGlues can optionally use ANGLE for its own internal GLES backend
+        // (see the "Use ANGLE as driver" MG-ES setting, written into config.json above).
+        // Reuse Copper's existing GLESProvider (system/external ANGLE) instead of the
+        // hardcoded nativeLibraryDir lookup upstream used - this avoids depending on
+        // bundling ANGLE's .so files directly and picks up system ANGLE on Android 15+
+        // or an AnglePlugin if one is installed. If neither is available, this safely
+        // falls back to a no-op (native GLES), which MobileGlues will ignore anyway if
+        // its own "enableANGLE" setting is off.
+        GLESProvider provider = GLESProvider.getGlesProvider(context, true);
+        Log.i("MobileGluesRenderSpec", "Using GLESProvider: " + provider.type());
+        provider.setEnvironment(envMap);
         envMap.put("MG_DIR_PATH", Tools.DIR_DATA + "/MobileGlues");
     }
     public boolean setupRenderer() {
