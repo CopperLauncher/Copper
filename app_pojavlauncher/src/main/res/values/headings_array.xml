@@ -37,4 +37,59 @@
         <item>bmclapi</item>
     </string-array>
 
+    <!-- MG-ES (MobileGlues) renderer settings -->
+    <!--TODO: Make this translatable-->
+    <string-array name="mg_renderer_names_angle">
+        <item>Disable if possible</item>
+        <item>Enable if possible</item>
+        <item>Disabled</item>
+        <item>Enabled</item>
+    </string-array>
+    <string-array name="mg_renderer_values_angle">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+    </string-array>
+    <string-array name="mg_renderer_names_multidraw">
+        <item>Auto</item>
+        <item>Prefer Indirect</item>
+        <item>Prefer BaseVertex</item>
+        <item>Prefer MultiDraw Indirect</item>
+        <item>Force DrawElements</item>
+    </string-array>
+    <string-array name="mg_renderer_values_multidraw">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+    </string-array>
+    <string-array name="mg_renderer_names_errorSetting">
+        <item>Auto</item>
+        <item>Don\'t ignore</item>
+        <item>Ignore shader/program errors</item>
+        <item>Ignore shader/program/framebuffer errors</item>
+    </string-array>
+    <string-array name="mg_renderer_values_errorSetting">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+    </string-array>
+    <string-array name="mg_renderer_names_fsr">
+        <item>Disabled</item>
+        <item>Performance</item>
+        <item>Balanced</item>
+        <item>Quality</item>
+        <item>Ultra Quality</item>
+    </string-array>
+    <string-array name="mg_renderer_values_fsr">
+        <item>0</item>
+        <item>4</item>
+        <item>3</item>
+        <item>2</item>
+        <item>1</item>
+    </string-array>
+
 </resources>

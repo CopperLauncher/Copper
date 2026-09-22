@@ -14,6 +14,7 @@ import git.artdeell.mojo.R;
 
 import net.kdt.pojavlaunch.Architecture;
 import net.kdt.pojavlaunch.game.renderer.RendererCache;
+import net.kdt.pojavlaunch.game.renderer.def.Renderers;
 import net.kdt.pojavlaunch.game.renderer.extra.GLESProvider;
 import net.kdt.pojavlaunch.plugins.LibraryPlugin;
 import net.kdt.pojavlaunch.prefs.CustomSeekBarPreference;
@@ -92,5 +93,8 @@ public class LauncherPreferenceVideoFragment extends LauncherPreferenceFragment 
     private void computeVisibility(){
         requirePreference("force_vsync", SwitchPreferenceCompat.class)
                 .setVisible(LauncherPreferences.PREF_USE_ALTERNATE_SURFACE);
+
+        boolean isMobileGluesRenderer = Renderers.MOBILEGLUES_RENDERER.equals(LauncherPreferences.PREF_RENDERER);
+        requirePreference("renderer_settings").setVisible(isMobileGluesRenderer);
     }
 }
