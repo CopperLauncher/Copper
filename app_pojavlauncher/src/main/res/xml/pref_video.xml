@@ -12,6 +12,15 @@
             android:icon="@drawable/ic_px_image_renderer"
             app2:useSimpleSummaryProvider="true"/>
 
+        <Preference
+            android:key="renderer_settings"
+            android:title="@string/mcl_setting_title_renderer_settings"
+            android:icon="@drawable/ic_px_image_renderer"
+            android:summary="@string/mcl_setting_title_renderer_subtitle"
+            android:fragment="net.kdt.pojavlaunch.prefs.screens.LauncherPreferenceRendererSettingsFragment"
+            android:visible="false"
+            />
+
         <androidx.preference.SwitchPreferenceCompat
             android:defaultValue="false"
             android:key="ignoreNotch"

@@ -8,4 +8,5 @@ public final class Renderers {
     public static final String MESA_RENDERER = "mesa_desktop";
     public static final String MESA_RENDERER_EXT = "mesa_desktop_ext";
     public static final String LEGACYZINK_RENDERER = "vulkan_legacyzink";
+    public static final String MOBILEGLUES_RENDERER = "opengles_mobileglues";
 }

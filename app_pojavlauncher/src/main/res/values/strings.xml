@@ -70,6 +70,7 @@
     <string name="mcl_setting_renderer_freedreno_kgsl">Freedreno (KGSL) - all versions, fast</string>
     <string name="mcl_setting_renderer_mesa_desktop">Mesa (DRM) - all versions, fast</string>
     <string name="mcl_setting_renderer_mesa_desktop_ext">Mesa (DRM, external) - all versions, fast</string>
+    <string name="mcl_setting_renderer_mobileglues">MobileGlues (OpenGL ES) - 1.17+ only, fast</string>
     <string name="mcl_setting_veroption_release">Release</string>
     <string name="mcl_setting_veroption_snapshot">Snapshot</string>
     <string name="mcl_setting_veroption_oldalpha">Old-alpha</string>
@@ -93,6 +94,7 @@
     <string name="global_select">Select</string>
     <string name="global_retry">Retry</string>
     <string name="global_default">Default</string>
+    <string name="global_off">Off</string>
 
     <!-- MainActivity: strings -->
     <string name="mcn_exit_title">Application/Game exited with code %d, check latestlog.txt for more details.</string>
@@ -556,4 +558,25 @@
     <string name="preference_theme_color_dialog_hint">Pick any color. The launcher theme is generated from it.</string>
     <string name="preference_theme_color_hex">Hex color</string>
     <string name="preference_theme_color_reset">Reset</string>
+
+    <!-- MG-ES (MobileGlues) renderer settings -->
+    <string name="preference_renderer_mobileglues_settings">MobileGlues Renderer Settings</string>
+    <string name="mg_renderer_glsl_cache">Max GLSL cache size</string>
+    <string name="mg_renderer_angle">Use ANGLE as driver</string>
+    <string name="mg_renderer_multidraw">Multidraw emulation mode</string>
+    <string name="mg_renderer_title_errorSetting">Error Filtering</string>
+    <string name="mg_renderer_title_timerQueryExt">Disable GPU Utilization in F3 menu</string>
+    <string name="mg_renderer_summary_timerQueryExt">Fixes random crashes when F3 is open on some Mali devices</string>
+    <string name="preference_ANGLE_only">ANGLE Only Options</string>
+    <string name="mg_renderer_title_angleDepthClearFixMode">Fix hand and held items from going through blocks</string>
+    <string name="mg_renderer_summary_angleDepthClearFixMode">Only affects ANGLE, can affect performance.</string>
+    <string name="mg_renderer_title_computeShaderext">Advertise Experimental Compute Shader extension</string>
+    <string name="mg_renderer_summary_computeShaderext">May help with shaderpack glitches. Disable if not needed, can cause crashes.</string>
+    <string name="mg_renderer_title_multidrawCompute">Use Compute Multidraw Emulation</string>
+    <string name="mg_renderer_summary_multidrawCompute">Uses compute shaders for multidraw emulation</string>
+    <string name="mg_renderer_title_dsaExt">Advertise Experimental Direct State Access extension</string>
+    <string name="mg_renderer_summary_dsaExt">May help with Iris shaderpacks, required for AcceleratedRendering mod</string>
+    <string name="mg_renderer_title_fsr">AMD FSR 1 Upscaling</string>
+    <string name="mcl_setting_title_renderer_settings">Extra Renderer Settings</string>
+    <string name="mcl_setting_title_renderer_subtitle">Renderer specific settings</string>
 </resources>
