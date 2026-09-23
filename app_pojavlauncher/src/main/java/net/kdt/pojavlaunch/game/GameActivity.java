@@ -129,10 +129,13 @@ public class GameActivity extends BaseActivity implements ControlButtonMenuListe
         mGameRenderer = new GameRenderer(instance.getLaunchRenderer());
 
         if(instance.useSFPEW) {
-            if(SFPEWRenderSpec.isAvailable()) {
+            // SFPEW needs API 26+ (idk why cuz i forgot LOL) the manifest
+            // merger's own check for that is overridden (AndroidManifest.xml), so enforce
+            // it here instead of just checking the library file is present.
+            if(Build.VERSION.SDK_INT >= 26 && SFPEWRenderSpec.isAvailable()) {
                 mGameRenderer.setCurrentRenderer(new SFPEWRenderSpec(mGameRenderer.getCurrentRenderer()));
             } else {
-                Log.w("GameActivity", "Instance has SFPEW enabled but libSimpleFPEWrapper.so is missing, ignoring");
+                Log.w("GameActivity", "Instance has SFPEW enabled but it's unavailable on this device/build, ignoring");
             }
         }
 

@@ -2,6 +2,20 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <!--
+      SimpleFPEWrapper (SFPEW, :SimpleFPEWrapper submodule) declares minSdk 26, above this
+      app's own minSdk 21, so the manifest merger refuses to merge it in by default:
+        "uses-sdk:minSdkVersion 21 cannot be smaller than version 26 declared in
+         library [:SimpleFPEWrapper] ... the library might be using APIs not available in 21"
+      Raising the whole app's minSdk to 26 just for one optional renderer wrapper would drop
+      support for Android 5.0-7.1 entirely, which is not worth it - SFPEW is opt-in per
+      instance (Instance#useSFPEW) and already gated at runtime by
+      SFPEWRenderSpec#isAvailable()/#compatibleDevice(), which only offers/uses it when
+      libSimpleFPEWrapper.so is actually present, so devices below 26 are unaffected either
+      way. Override the check instead of raising the floor for everyone.
+    -->
+    <uses-sdk tools:overrideLibrary="top.mobilegl.simplefpewrapper" />
+
     <uses-feature android:glEsVersion="0x00020000" />
     <uses-feature
         android:name="android.hardware.type.pc"

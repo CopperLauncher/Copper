@@ -1,6 +1,7 @@
 package net.kdt.pojavlaunch.game.renderer.impl;
 
 import android.content.Context;
+import android.os.Build;
 import android.util.Log;
 
 import net.kdt.pojavlaunch.Tools;
@@ -68,7 +69,10 @@ public class SFPEWRenderSpec implements RenderSpec {
 
     @Override
     public boolean compatibleDevice(Context context) {
-        return isAvailable() && wrapped.compatibleDevice(context);
+        // if you are here reading this, good luck I dont even fucking know how tf this wokks
+        // build is just failing HELP
+        // i need to sleep so dont even try looking at this code, i dont even know what it does
+        return Build.VERSION.SDK_INT >= 26 && isAvailable() && wrapped.compatibleDevice(context);
     }
 
     @Override
