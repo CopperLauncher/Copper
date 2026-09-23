@@ -1,1 +1,17 @@
-
+// Root Gradle build file.
+//
+// SimpleFPEWrapper (git submodule, MobileGL-Dev/SimpleFPEWrapper) applies AGP the classic
+// way - "apply plugin: 'com.android.library'", no version pinned in its own build.gradle -
+// instead of the modern plugins {} DSL app_pojavlauncher itself uses. That old-style apply
+// only resolves if the plugin's implementation is already on that project's buildscript
+// classpath. Declaring it here with "apply false" resolves the plugin once at the root and
+// makes its classpath available to every subproject, without applying it to the root
+// project itself and without touching the submodule's own (upstream) build.gradle.
+//
+// This only supplies the plugin here for subprojects that don't pin their own version
+// (like SimpleFPEWrapper) - a subproject (app_pojavlauncher included) that already
+// requests a specific version itself is unaffected as long as it agrees with this one;
+// keep this in sync with the AGP version app_pojavlauncher pins if that ever changes.
+plugins {
+    id 'com.android.library' version '8.11.1' apply false
+}
