@@ -28,6 +28,12 @@ public class Instance extends DisplayInstance {
     public String selectedRuntime;
     public String controlLayout;
     public boolean sharedData;
+    /**
+     * Whether to wrap this instance's renderer (whichever one {@link #getLaunchRenderer()}
+     * resolves to - GL4ES, LTW, Mesa, Zink, Freedreno, MobileGlues, ...) with
+     * MobileGL-Dev/SimpleFPEWrapper. See {@link net.kdt.pojavlaunch.game.renderer.impl.SFPEWRenderSpec}.
+     */
+    public boolean useSFPEW;
 
     protected Instance() {
     }

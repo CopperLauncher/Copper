@@ -52,6 +52,7 @@ public class InstanceEditorFragment extends Fragment implements CropperUtils.Cro
     private TextView mDefaultVersion, mDefaultControl;
     private ImageView mInstanceIcon;
     private CheckBox mSharedDataCheckbox;
+    private CheckBox mSFPEWCheckbox;
     private int mRecommendedIconSize;
     private final ActivityResultLauncher<?> mCropperLauncher = CropperUtils.registerCropper(this, this);
 
@@ -118,6 +119,13 @@ public class InstanceEditorFragment extends Fragment implements CropperUtils.Cro
             mSharedDataCheckbox.setText(text);
         });
 
+        mSFPEWCheckbox.setOnCheckedChangeListener((v,checked) -> {
+            mInstance.useSFPEW = checked;
+            int text = R.string.pedit_use_sfpew_off;
+            if(checked) text = R.string.pedit_use_sfpew_on;
+            mSFPEWCheckbox.setText(text);
+        });
+
         Instance selectedInstance = Instances.loadSelectedInstance();
         Context context = view.getContext();
         if(selectedInstance == null) {
@@ -176,6 +184,9 @@ public class InstanceEditorFragment extends Fragment implements CropperUtils.Cro
         mDefaultName.setText(nullToEmpty(instance.name));
         mDefaultControl.setText(mSelectedControlLayout == null ? nullToEmpty(instance.controlLayout) : mSelectedControlLayout);
         mSharedDataCheckbox.setChecked(instance.sharedData);
+
+        mSFPEWCheckbox.setChecked(instance.useSFPEW);
+        mSFPEWCheckbox.setText(instance.useSFPEW ? R.string.pedit_use_sfpew_on : R.string.pedit_use_sfpew_off);
     }
 
     private void bindViews(@NonNull View view){
@@ -193,6 +204,7 @@ public class InstanceEditorFragment extends Fragment implements CropperUtils.Cro
         mVersionSelectButton = view.findViewById(R.id.vprof_editor_version_button);
         mInstanceIcon = view.findViewById(R.id.vprof_editor_instance_icon);
         mSharedDataCheckbox = view.findViewById(R.id.vprof_editor_data_checkbox_container);
+        mSFPEWCheckbox = view.findViewById(R.id.vprof_editor_sfpew_checkbox);
     }
 
     private void save(){

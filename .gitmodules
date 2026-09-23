@@ -7,3 +7,6 @@
 [submodule "sdl"]
 	path = sdl
 	url = https://github.com/MojoLauncher/MojoSDL
+[submodule "SimpleFPEWrapper"]
+	path = SimpleFPEWrapper
+	url = https://github.com/MobileGL-Dev/SimpleFPEWrapper.git

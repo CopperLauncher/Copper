@@ -243,6 +243,24 @@
                 app:layout_constraintEnd_toEndOf="@id/vprof_editor_instance_renderer"
                 app:layout_constraintTop_toTopOf="@id/vprof_editor_instance_renderer" />
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/pedit_use_sfpew"
+                app:layout_constraintBottom_toTopOf="@+id/vprof_editor_sfpew_checkbox"
+                app:layout_constraintStart_toStartOf="@+id/vprof_editor_sfpew_checkbox"/>
+
+            <CheckBox
+                android:id="@+id/vprof_editor_sfpew_checkbox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
+                android:background="@drawable/background_line"
+                android:paddingHorizontal="@dimen/padding_heavy"
+                android:button="@null"
+                android:text="@string/pedit_use_sfpew_off"
+                android:textColor="@color/checkbox_text_color"
+                app:layout_constraintTop_toBottomOf="@+id/vprof_editor_instance_renderer" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>

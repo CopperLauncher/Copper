@@ -48,6 +48,7 @@ import com.kdt.LoggerView;
 import net.kdt.pojavlaunch.BaseActivity;
 import net.kdt.pojavlaunch.CallbackBridge;
 import net.kdt.pojavlaunch.game.renderer.GameRenderer;
+import net.kdt.pojavlaunch.game.renderer.impl.SFPEWRenderSpec;
 import net.kdt.pojavlaunch.utils.GpuUtils;
 import net.kdt.pojavlaunch.utils.KeycodeUtils;
 import net.kdt.pojavlaunch.Logger;
@@ -126,6 +127,14 @@ public class GameActivity extends BaseActivity implements ControlButtonMenuListe
             return;
         }
         mGameRenderer = new GameRenderer(instance.getLaunchRenderer());
+
+        if(instance.useSFPEW) {
+            if(SFPEWRenderSpec.isAvailable()) {
+                mGameRenderer.setCurrentRenderer(new SFPEWRenderSpec(mGameRenderer.getCurrentRenderer()));
+            } else {
+                Log.w("GameActivity", "Instance has SFPEW enabled but libSimpleFPEWrapper.so is missing, ignoring");
+            }
+        }
 
         if(GpuUtils.getGlInfo().isAdreno() && !PREF_ZINK_PREFER_SYSTEM_DRIVER) {
             mGameRenderer.overrideVulkanDriver();
